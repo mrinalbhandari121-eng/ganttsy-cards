@@ -785,8 +785,200 @@
     font-style: italic;
   }
 
+  /* ===== Intent Mapping Section ===== */
+  .intent-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-sm);
+  }
+  .intent-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .intent-section .sub { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+  .intent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .intent-block h4 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .intent-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--bg-soft);
+  }
+  .intent-row:last-child { border-bottom: none; }
+  .intent-row code { font-size: 12px; background: var(--bg-soft); padding: 3px 8px; border-radius: 5px; color: var(--text); font-family: 'SF Mono', Monaco, Menlo, monospace; }
+  .intent-arrow { color: var(--text-subtle); font-size: 14px; padding: 0 8px; }
+  .intent-row .widget { font-weight: 600; color: var(--primary); }
+
+  /* ===== Slider batch mode ===== */
+  .slider-batch-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .slider-batch-row:last-child { border-bottom: none; }
+  .slider-batch-label { width: 120px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .slider-batch-track {
+    flex: 1; height: 6px;
+    background: var(--bg-soft);
+    border-radius: 999px;
+    position: relative;
+  }
+  .slider-batch-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 999px;
+  }
+  .slider-batch-thumb {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: white;
+    border: 2.5px solid var(--primary);
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: var(--shadow-sm);
+  }
+  .slider-batch-value { width: 40px; text-align: right; font-weight: 600; font-size: 13px; color: var(--primary); }
+
+  /* ===== 21. Level Up ===== */
+  .levelup-card {
+    position: relative;
+    background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #312E81 100%);
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 8px 32px rgba(79, 70, 229, 0.3);
+  }
+  .levelup-card.special {
+    background: linear-gradient(135deg, #0C0A1F 0%, #2D1B4E 50%, #4C1D95 100%);
+    box-shadow: 0 12px 48px rgba(168, 85, 247, 0.5), inset 0 0 60px rgba(168, 85, 247, 0.15);
+  }
+  .levelup-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--lvl-color, #818CF8), transparent 40%, transparent 60%, var(--lvl-color, #818CF8));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: shimmer 3s linear infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  .levelup-sparkles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .levelup-sparkles .sp {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: var(--lvl-color, #C4B5FD);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--lvl-color, #C4B5FD);
+    animation: float 4s ease-in-out infinite;
+  }
+  .levelup-sparkles .sp:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+  .levelup-sparkles .sp:nth-child(2) { top: 30%; right: 20%; animation-delay: 0.5s; }
+  .levelup-sparkles .sp:nth-child(3) { bottom: 30%; left: 25%; animation-delay: 1s; }
+  .levelup-sparkles .sp:nth-child(4) { bottom: 25%; right: 18%; animation-delay: 1.5s; }
+  .levelup-sparkles .sp:nth-child(5) { top: 50%; right: 30%; animation-delay: 2s; }
+  .levelup-sparkles .sp:nth-child(6) { top: 60%; left: 20%; animation-delay: 2.5s; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+    50% { transform: translateY(-12px) scale(1.4); opacity: 1; }
+  }
+  .levelup-banner {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: var(--lvl-color, #FCD34D);
+  }
+  .levelup-attr-name {
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    opacity: 0.7;
+    margin-bottom: 4px;
+  }
+  .levelup-level-num {
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    background: linear-gradient(135deg, white, var(--lvl-color, #C4B5FD));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 8px 0 4px;
+  }
+  .levelup-level-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--lvl-color, #C4B5FD);
+  }
+  .levelup-divider {
+    width: 60px; height: 2px;
+    background: var(--lvl-color, #818CF8);
+    margin: 0 auto 20px;
+    opacity: 0.6;
+  }
+  .levelup-quote {
+    font-size: 14px;
+    font-style: italic;
+    line-height: 1.6;
+    opacity: 0.85;
+    max-width: 360px;
+    margin: 0 auto 16px;
+    color: rgba(255,255,255,0.9);
+  }
+  .levelup-message {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 24px;
+  }
+  .levelup-btn {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 24px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .levelup-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+
+  /* Compact / non-special variant */
+  .levelup-card.compact {
+    padding: 24px 20px;
+    background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+  }
+  .levelup-card.compact .levelup-level-num { font-size: 44px; }
+  .levelup-card.compact .levelup-level-name { font-size: 18px; }
+
   /* ===== Responsive ===== */
   @media (max-width: 700px) {
+    .intent-grid { grid-template-columns: 1fr; }
     .page-header { padding: 32px 20px 56px; }
     .page-header h1 { font-size: 28px; }
     main { padding: 0 16px; }
@@ -806,7 +998,7 @@
     <div class="meta">
       <span>DD-001 · DRAFT</span>
       <span>·</span>
-      <span>20 cards across 5 categories</span>
+      <span>21 cards across 5 categories</span>
       <span>·</span>
       <span>V1 · V2 · V3 priority bands</span>
     </div>
@@ -816,12 +1008,44 @@
 <main>
 
   <div class="filter-bar">
-    <button class="filter-chip active" onclick="filterCat('all', this)">All cards (20)</button>
+    <button class="filter-chip active" onclick="filterCat('all', this)">All cards (21)</button>
     <button class="filter-chip" onclick="filterCat('input', this)">Input (11)</button>
     <button class="filter-chip" onclick="filterCat('confirm', this)">Confirmation (1)</button>
     <button class="filter-chip" onclick="filterCat('nav', this)">Navigation (2)</button>
-    <button class="filter-chip" onclick="filterCat('display', this)">Display (3)</button>
+    <button class="filter-chip" onclick="filterCat('display', this)">Display (4)</button>
     <button class="filter-chip" onclick="filterCat('tool', this)">Tool Result (3)</button>
+  </div>
+
+  <div class="intent-section">
+    <h3>Intent → Widget mapping</h3>
+    <div class="sub">The agent emits a semantic <strong>intent</strong>; <code>composeUi</code> picks the widget that renders it. Same widget, many intents.</div>
+    <div class="intent-grid">
+      <div class="intent-block">
+        <h4>V1 generic intents</h4>
+        <div class="intent-row"><code>project_size</code><span class="intent-arrow">→</span><span class="widget">single_choice</span></div>
+        <div class="intent-row"><code>experience_level</code><span class="intent-arrow">→</span><span class="widget">single_choice</span></div>
+        <div class="intent-row"><code>single_choice</code><span class="intent-arrow">→</span><span class="widget">single_choice</span></div>
+        <div class="intent-row"><code>yes_no_question</code><span class="intent-arrow">→</span><span class="widget">yes_no</span></div>
+        <div class="intent-row"><code>importance_rating</code><span class="intent-arrow">→</span><span class="widget">slider</span></div>
+        <div class="intent-row"><code>scope_switch_suggestion</code><span class="intent-arrow">→</span><span class="widget">single_choice</span></div>
+        <div class="intent-row"><code>level_up</code><span class="intent-arrow">→</span><span class="widget">level_up</span></div>
+      </div>
+      <div class="intent-block">
+        <h4>Setup-flow intents (GAN-256)</h4>
+        <div class="intent-row"><code>setup_mode_toggle</code><span class="intent-arrow">→</span><span class="widget">setup_mode_toggle</span></div>
+        <div class="intent-row"><code>daily_checkin_time</code><span class="intent-arrow">→</span><span class="widget">time_picker</span></div>
+        <div class="intent-row"><code>why_motivation</code><span class="intent-arrow">→</span><span class="widget">multi_select</span></div>
+        <div class="intent-row"><code>quit_reasons_awareness</code><span class="intent-arrow">→</span><span class="widget">acknowledge_list</span></div>
+        <div class="intent-row"><code>risk_acknowledgment</code><span class="intent-arrow">→</span><span class="widget">acknowledge_list</span></div>
+        <div class="intent-row"><code>deadline_preference</code><span class="intent-arrow">→</span><span class="widget">date_picker</span></div>
+        <div class="intent-row"><code>energy_commitment</code><span class="intent-arrow">→</span><span class="widget">slider</span></div>
+        <div class="intent-row"><code>budget_range</code><span class="intent-arrow">→</span><span class="widget">slider</span></div>
+        <div class="intent-row"><code>skill_assessment</code><span class="intent-arrow">→</span><span class="widget">slider (batch)</span></div>
+        <div class="intent-row"><code>tool_inventory</code><span class="intent-arrow">→</span><span class="widget">inventory_checklist</span></div>
+        <div class="intent-row"><code>material_inventory</code><span class="intent-arrow">→</span><span class="widget">inventory_checklist</span></div>
+        <div class="intent-row"><code>step_completion</code><span class="intent-arrow">→</span><span class="widget">summary_confirmation</span></div>
+      </div>
+    </div>
   </div>
 
   <!-- ============== INPUT ============== -->
@@ -941,6 +1165,70 @@
             </div>
             <div class="card-actions">
               <button class="btn btn-primary btn-block">Set priority</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3b. Slider — Batch -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>3b. Slider — Batch <code>items[]</code></h3><code>slider</code></div>
+        <div class="spec-meta"><span class="badge badge-v1">V1</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> <code>skill_assessment</code> · Rate multiple items on the same scale in one card. Ships with <code>items[]</code> prop instead of a single value.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            Quick self-assessment — rate how confident you feel on each skill (1 = beginner, 5 = expert).
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="slider-batch-row">
+              <div class="slider-batch-label">Carpentry</div>
+              <div class="slider-batch-track">
+                <div class="slider-batch-fill" style="width: 40%;"></div>
+                <div class="slider-batch-thumb" style="left: 40%;"></div>
+              </div>
+              <div class="slider-batch-value">2 / 5</div>
+            </div>
+            <div class="slider-batch-row">
+              <div class="slider-batch-label">Plumbing</div>
+              <div class="slider-batch-track">
+                <div class="slider-batch-fill" style="width: 20%;"></div>
+                <div class="slider-batch-thumb" style="left: 20%;"></div>
+              </div>
+              <div class="slider-batch-value">1 / 5</div>
+            </div>
+            <div class="slider-batch-row">
+              <div class="slider-batch-label">Electrical</div>
+              <div class="slider-batch-track">
+                <div class="slider-batch-fill" style="width: 60%;"></div>
+                <div class="slider-batch-thumb" style="left: 60%;"></div>
+              </div>
+              <div class="slider-batch-value">3 / 5</div>
+            </div>
+            <div class="slider-batch-row">
+              <div class="slider-batch-label">Tile work</div>
+              <div class="slider-batch-track">
+                <div class="slider-batch-fill" style="width: 40%;"></div>
+                <div class="slider-batch-thumb" style="left: 40%;"></div>
+              </div>
+              <div class="slider-batch-value">2 / 5</div>
+            </div>
+            <div class="slider-batch-row">
+              <div class="slider-batch-label">Painting</div>
+              <div class="slider-batch-track">
+                <div class="slider-batch-fill" style="width: 80%;"></div>
+                <div class="slider-batch-thumb" style="left: 80%;"></div>
+              </div>
+              <div class="slider-batch-value">4 / 5</div>
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Save assessment</button>
             </div>
           </div>
         </div>
@@ -1472,7 +1760,7 @@
   <section class="category-section" data-cat="display">
     <div class="category-header">
       <h2>Display Cards</h2>
-      <span class="count">3 cards</span>
+      <span class="count">4 cards</span>
     </div>
 
     <!-- 11. Product Card -->
@@ -1532,6 +1820,72 @@
             <div class="progress-due">
               📅 Due <strong style="color: var(--text);">May 22, 2026</strong> · 25 days remaining
             </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 21. Level Up -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>21. Level Up</h3><code>level_up</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Display-only mastery celebration (GAN-383). Programmatically injected when the user crosses an attribute threshold. Two variants: <code>is_special</code> (milestone) and standard.</div>
+      <div class="chat-mock">
+
+        <!-- Special variant -->
+        <div class="card-wrapper" style="margin-left: 0; margin-bottom: 24px;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Special milestone (is_special: true)</div>
+          <div class="levelup-card special" style="--lvl-color: #FCD34D;">
+            <div class="levelup-sparkles">
+              <span class="sp"></span><span class="sp"></span><span class="sp"></span>
+              <span class="sp"></span><span class="sp"></span><span class="sp"></span>
+            </div>
+            <div class="levelup-banner">✦ Level Up ✦</div>
+            <div class="levelup-attr-name">Discipline</div>
+            <div class="levelup-level-num">5</div>
+            <div class="levelup-level-name">Master</div>
+            <div class="levelup-divider"></div>
+            <div class="levelup-quote">"The seed that becomes a tree must first be planted in patient soil."</div>
+            <div class="levelup-message">You've maintained focus for 30 days straight. The discipline is becoming who you are.</div>
+            <button class="levelup-btn">Continue your journey →</button>
+          </div>
+        </div>
+
+        <!-- Standard variant -->
+        <div class="card-wrapper" style="margin-left: 0;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Standard (is_special: false)</div>
+          <div class="levelup-card compact" style="--lvl-color: #34D399;">
+            <div class="levelup-sparkles">
+              <span class="sp"></span><span class="sp"></span><span class="sp"></span>
+            </div>
+            <div class="levelup-banner">Level Up</div>
+            <div class="levelup-attr-name">Patience</div>
+            <div class="levelup-level-num">3</div>
+            <div class="levelup-level-name">Apprentice</div>
+            <div class="levelup-divider"></div>
+            <div class="levelup-quote">"Slow is smooth. Smooth is fast."</div>
+            <div class="levelup-message">Three pauses before reacting this week. The pattern is forming.</div>
+            <button class="levelup-btn">Continue →</button>
+          </div>
+        </div>
+
+        <!-- Third variant — different attribute color -->
+        <div class="card-wrapper" style="margin-left: 0; margin-top: 24px;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Custom attribute color (e.g., Curiosity → cyan)</div>
+          <div class="levelup-card compact" style="--lvl-color: #22D3EE;">
+            <div class="levelup-sparkles">
+              <span class="sp"></span><span class="sp"></span><span class="sp"></span>
+            </div>
+            <div class="levelup-banner">Level Up</div>
+            <div class="levelup-attr-name">Curiosity</div>
+            <div class="levelup-level-num">2</div>
+            <div class="levelup-level-name">Explorer</div>
+            <div class="levelup-divider"></div>
+            <div class="levelup-quote">"Questions are doors. Answers are rooms."</div>
+            <div class="levelup-message">You asked 'why?' five times today. Keep wandering.</div>
+            <button class="levelup-btn">Continue →</button>
           </div>
         </div>
       </div>
@@ -1766,7 +2120,7 @@
   </section>
 
   <footer style="text-align: center; color: var(--text-subtle); font-size: 13px; padding: 32px 0;">
-    Ganttsy DD-001 · Chat Card Catalog · 20 cards · Generated reference
+    Ganttsy DD-001 · Chat Card Catalog · 21 cards · Generated reference
   </footer>
 
 </main>
