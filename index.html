@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ganttsy — Chat Card Catalog (DD-001)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-page: #FAFAF9;
+    --bg-card: #FFFFFF;
+    --bg-soft: #F5F5F4;
+    --bg-agent: #F4F4F5;
+    --bg-code: #FAFAF9;
+    --border: #E7E5E4;
+    --border-strong: #D6D3D1;
+    --text: #1C1917;
+    --text-muted: #57534E;
+    --text-subtle: #A8A29E;
+    --primary: #4F46E5;
+    --primary-soft: #EEF2FF;
+    --primary-hover: #4338CA;
+    --accent: #7C3AED;
+    --success: #059669;
+    --success-soft: #D1FAE5;
+    --warning: #D97706;
+    --warning-soft: #FEF3C7;
+    --error: #DC2626;
+    --error-soft: #FEE2E2;
+    --info: #2563EB;
+    --info-soft: #DBEAFE;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); background: var(--bg-page); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  input, textarea { font-family: inherit; font-size: inherit; }
+  a { color: var(--primary); text-decoration: none; }
+
+  /* ===== Layout ===== */
+  .page-header {
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+    color: white;
+    padding: 56px 32px 80px;
+  }
+  .page-header-inner { max-width: 1200px; margin: 0 auto; }
+  .page-header h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .page-header p { font-size: 16px; opacity: 0.9; max-width: 720px; }
+  .page-header .meta { margin-top: 16px; display: flex; gap: 16px; font-size: 13px; opacity: 0.85; }
+
+  main { max-width: 1200px; margin: -48px auto 80px; padding: 0 32px; position: relative; z-index: 1; }
+
+  .filter-bar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-chip {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .filter-chip.active { background: var(--primary); color: white; }
+  .filter-chip:hover:not(.active) { background: var(--border); color: var(--text); }
+
+  .category-section { margin-bottom: 56px; }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .category-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+  .category-header .count {
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .card-spec {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .spec-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .spec-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .spec-title h3 { font-size: 18px; font-weight: 700; }
+  .spec-title code { font-size: 13px; color: var(--text-muted); background: var(--bg-soft); padding: 3px 8px; border-radius: 6px; font-family: 'SF Mono', Monaco, Menlo, monospace; }
+  .spec-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge-v1 { background: var(--success-soft); color: var(--success); }
+  .badge-v2 { background: var(--warning-soft); color: var(--warning); }
+  .badge-v3 { background: var(--info-soft); color: var(--info); }
+
+  .spec-usecase {
+    padding: 16px 24px;
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-usecase strong { color: var(--text); font-weight: 600; }
+
+  .chat-mock {
+    padding: 32px 24px;
+    background: linear-gradient(180deg, #FBFBFA 0%, #F5F5F4 100%);
+    min-height: 100px;
+  }
+
+  /* ===== Chat bubble base ===== */
+  .agent-row { display: flex; gap: 12px; margin-bottom: 16px; max-width: 560px; }
+  .agent-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    color: white; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+  }
+  .agent-bubble {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px 16px 16px 16px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+  .agent-bubble .context { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+  .card-wrapper {
+    margin-left: 44px;
+    max-width: 520px;
+  }
+
+  /* ===== Card base ===== */
+  .ui-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-question { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+  .card-help { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+  .card-actions { display: flex; gap: 8px; margin-top: 16px; }
+
+  .btn {
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-secondary { background: white; color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg-soft); }
+  .btn-ghost { color: var(--text-muted); }
+  .btn-ghost:hover { background: var(--bg-soft); color: var(--text); }
+  .btn-block { width: 100%; justify-content: center; }
+  .btn-lg { padding: 12px 20px; font-size: 15px; }
+
+  /* ===== 1. Single Choice ===== */
+  .choice-list { display: flex; flex-direction: column; gap: 8px; }
+  .choice-option {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    width: 100%;
+    background: white;
+  }
+  .choice-option:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .choice-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .choice-option .icon-box {
+    width: 36px; height: 36px;
+    background: var(--bg-soft);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+  .choice-option.selected .icon-box { background: var(--primary); color: white; }
+  .choice-option .content { flex: 1; }
+  .choice-option .label { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .choice-option .desc { font-size: 12px; color: var(--text-muted); }
+  .choice-option .check {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .choice-option.selected .check { background: var(--primary); border-color: var(--primary); }
+  .choice-option.selected .check::after {
+    content: ''; width: 6px; height: 10px;
+    border: solid white; border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  /* ===== 2. Yes / No ===== */
+  .yesno-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .yesno-btn {
+    padding: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    text-align: left;
+    transition: all 0.15s;
+  }
+  .yesno-btn:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .yesno-btn .yn-label { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .yesno-btn .yn-conseq { font-size: 12px; color: var(--text-muted); }
+  .yesno-btn.yes:hover { border-color: var(--success); background: var(--success-soft); }
+  .yesno-btn.no:hover { border-color: var(--text-muted); background: var(--bg-soft); }
+
+  /* ===== 3. Slider ===== */
+  .slider-track {
+    height: 8px;
+    background: var(--bg-soft);
+    border-radius: 999px;
+    margin: 32px 8px 16px;
+    position: relative;
+  }
+  .slider-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 999px;
+    width: 50%;
+  }
+  .slider-thumb {
+    position: absolute;
+    width: 24px; height: 24px;
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: var(--shadow-md);
+    cursor: grab;
+  }
+  .slider-value-bubble {
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .slider-value-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 8px; height: 8px;
+    background: var(--text);
+  }
+  .slider-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin: 0 4px; }
+
+  /* ===== 4. Date Picker ===== */
+  .date-input-wrap { position: relative; }
+  .date-input {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .date-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  .date-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+  .date-relative { font-size: 13px; color: var(--primary); margin-top: 8px; font-weight: 500; }
+  .date-toggle { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+  .date-checkbox { width: 18px; height: 18px; border: 1.5px solid var(--border-strong); border-radius: 4px; }
+
+  /* ===== 5. Time Picker ===== */
+  .time-display {
+    background: var(--bg-soft);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .time-big { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  .time-period { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+  .time-dial { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+  .time-pill {
+    padding: 8px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    background: white;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .time-pill.active, .time-pill:hover { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+
+  /* ===== 6. Summary Confirmation ===== */
+  .summary-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .summary-icon-box {
+    width: 36px; height: 36px;
+    background: var(--success-soft);
+    color: var(--success);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .summary-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .summary-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px;
+    background: white;
+    gap: 12px;
+  }
+  .summary-item .summary-label { color: var(--text-muted); font-size: 13px; }
+  .summary-item .summary-value { font-weight: 600; font-size: 14px; }
+  .summary-edit {
+    color: var(--text-subtle);
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .summary-edit:hover { background: var(--bg-soft); color: var(--primary); }
+
+  /* ===== 7. Scope Selector ===== */
+  .scope-current {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    width: fit-content;
+  }
+  .scope-list { display: flex; flex-direction: column; gap: 6px; }
+  .scope-option {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    transition: all 0.15s;
+    text-align: left;
+    width: 100%;
+  }
+  .scope-option:hover:not(.current) { border-color: var(--primary); background: var(--primary-soft); }
+  .scope-option.current { border-color: var(--primary); background: var(--primary-soft); }
+  .scope-level-tag {
+    font-size: 10px;
+    text-transform: uppercase;
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .scope-option.current .scope-level-tag { background: var(--primary); color: white; }
+  .scope-info { flex: 1; }
+  .scope-info .label { font-weight: 600; font-size: 14px; }
+  .scope-info .desc { font-size: 12px; color: var(--text-muted); }
+
+  /* ===== 8. Deferred Item ===== */
+  .deferred-actions { display: flex; flex-direction: column; gap: 8px; }
+
+  /* ===== 9. Multi-Select ===== */
+  .multi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .multi-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    transition: all 0.15s;
+    text-align: left;
+  }
+  .multi-option:hover { border-color: var(--primary); }
+  .multi-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .multi-checkbox {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 5px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .multi-option.selected .multi-checkbox { background: var(--primary); border-color: var(--primary); }
+  .multi-option.selected .multi-checkbox::after {
+    content: ''; width: 6px; height: 10px;
+    border: solid white; border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .multi-option .ml { font-weight: 500; font-size: 13px; }
+
+  /* ===== 10. Text Input ===== */
+  .text-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: white;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .text-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  .text-counter { font-size: 12px; color: var(--text-subtle); text-align: right; margin-top: 6px; }
+
+  /* ===== 11. Product Card ===== */
+  .product-image {
+    width: 100%; height: 140px;
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  .product-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  .product-price { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .product-price-range { font-size: 12px; color: var(--text-muted); }
+  .product-tier {
+    font-size: 11px; text-transform: uppercase; font-weight: 600;
+    padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em;
+    display: inline-block; margin-bottom: 10px;
+  }
+  .product-tier.primary { background: var(--success-soft); color: var(--success); }
+
+  /* ===== 12. Progress Card ===== */
+  .progress-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .progress-title { font-weight: 700; font-size: 15px; }
+  .progress-status {
+    font-size: 11px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em;
+    padding: 4px 8px; border-radius: 4px;
+  }
+  .progress-status.in-progress { background: var(--info-soft); color: var(--info); }
+  .progress-bar-wrap { background: var(--bg-soft); height: 10px; border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 999px; transition: width 0.4s; }
+  .progress-stats { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); }
+  .progress-due { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+
+  /* ===== 13. Tool Result ===== */
+  .tool-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .tool-header {
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--border);
+  }
+  .tool-header.collapsed { border-bottom: none; }
+  .tool-icon {
+    width: 28px; height: 28px;
+    background: white;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--info);
+    flex-shrink: 0;
+  }
+  .tool-summary { flex: 1; min-width: 0; }
+  .tool-summary .ts-name { font-size: 13px; font-weight: 600; }
+  .tool-summary .ts-meta { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+  .tool-status-icon { color: var(--success); }
+  .tool-chevron { color: var(--text-subtle); transition: transform 0.2s; }
+  .tool-header.collapsed .tool-chevron { transform: rotate(-90deg); }
+  .tool-body { padding: 14px; font-size: 13px; }
+  .tool-body.hidden { display: none; }
+  .tool-meta-row { display: flex; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-size: 12px; color: var(--text-muted); }
+  .tool-citation { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .tool-citation:last-child { border-bottom: none; }
+  .tool-citation .ct-title { font-weight: 600; font-size: 13px; color: var(--primary); margin-bottom: 4px; }
+  .tool-citation .ct-snippet { font-size: 12px; color: var(--text-muted); }
+
+  /* ===== 14. Agent Handoff ===== */
+  .handoff-card {
+    background: linear-gradient(135deg, var(--primary-soft), #F5F3FF);
+    border: 1px solid #E0E7FF;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .handoff-from, .handoff-to {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: white;
+    flex-shrink: 0;
+  }
+  .handoff-arrow { color: var(--primary); }
+  .handoff-info { flex: 1; min-width: 0; }
+  .handoff-title { font-size: 13px; font-weight: 600; }
+  .handoff-reason { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .handoff-spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--primary-soft);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== 15. Memory Write ===== */
+  .memory-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .memory-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .memory-info { flex: 1; }
+  .memory-title { font-size: 13px; font-weight: 600; }
+  .memory-value { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+  .memory-time { font-size: 11px; color: var(--text-subtle); }
+
+  /* ===== 16. Acknowledge List ===== */
+  .ack-intro { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; padding: 12px; background: var(--warning-soft); border-radius: 8px; border-left: 3px solid var(--warning); }
+  .ack-item {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    background: white;
+  }
+  .ack-item.acknowledged { border-color: var(--success); background: #F0FDF4; }
+  .ack-item-header {
+    padding: 12px 14px;
+    display: flex; align-items: flex-start; gap: 12px;
+    cursor: pointer;
+  }
+  .ack-checkbox {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .ack-item.acknowledged .ack-checkbox { background: var(--success); border-color: var(--success); }
+  .ack-item.acknowledged .ack-checkbox::after {
+    content: ''; width: 6px; height: 10px;
+    border: solid white; border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .ack-content { flex: 1; }
+  .ack-label { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .ack-desc { font-size: 12px; color: var(--text-muted); }
+  .ack-expand { color: var(--text-subtle); padding: 4px; }
+  .ack-body { padding: 0 14px 14px 48px; font-size: 13px; color: var(--text-muted); }
+  .ack-body.hidden { display: none; }
+
+  /* ===== 17. Inventory Checklist ===== */
+  .inv-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    margin-bottom: 8px;
+  }
+  .inv-item.have { border-color: var(--success); background: #F0FDF4; }
+  .inv-item.need { border-color: var(--warning); background: #FFFBEB; }
+  .inv-icon {
+    width: 36px; height: 36px;
+    background: var(--bg-soft);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .inv-info { flex: 1; }
+  .inv-label { font-weight: 600; font-size: 14px; }
+  .inv-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .inv-states { display: flex; gap: 4px; }
+  .inv-state-btn {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    background: white;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .inv-state-btn.active.have { background: var(--success); border-color: var(--success); color: white; }
+  .inv-state-btn.active.need { background: var(--warning); border-color: var(--warning); color: white; }
+  .inv-state-btn.active.na { background: var(--text-subtle); border-color: var(--text-subtle); color: white; }
+  .inv-essential { font-size: 10px; padding: 2px 6px; background: var(--error-soft); color: var(--error); border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .inv-add {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px;
+    border: 1.5px dashed var(--border-strong);
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+    width: 100%;
+    text-align: left;
+  }
+  .inv-add:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+
+  /* ===== 18. Setup Mode Toggle ===== */
+  .setup-mode {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+  }
+  .setup-mode:hover { border-color: var(--primary); }
+  .setup-mode.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .setup-mode-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .setup-radio {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .setup-mode.selected .setup-radio { border-color: var(--primary); }
+  .setup-mode.selected .setup-radio::after {
+    content: ''; width: 10px; height: 10px;
+    background: var(--primary); border-radius: 50%;
+  }
+  .setup-mode-label { font-weight: 600; font-size: 14px; flex: 1; }
+  .setup-mode-time {
+    font-size: 11px; padding: 3px 8px;
+    background: var(--bg-soft); color: var(--text-muted);
+    border-radius: 999px; font-weight: 500;
+  }
+  .setup-mode.selected .setup-mode-time { background: var(--primary); color: white; }
+  .setup-mode-desc { font-size: 13px; color: var(--text-muted); padding-left: 32px; }
+  .setup-mode-rec { font-size: 11px; color: var(--accent); padding-left: 32px; margin-top: 4px; font-weight: 500; }
+
+  /* ===== 19. Voice Note Input ===== */
+  .voice-input-wrap {
+    background: white;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    padding: 8px 8px 8px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .voice-input-wrap.recording {
+    background: var(--error-soft);
+    border-color: var(--error);
+  }
+  .voice-text { flex: 1; color: var(--text-muted); font-size: 14px; }
+  .voice-recording-content { flex: 1; display: flex; align-items: center; gap: 12px; }
+  .voice-timer { font-family: 'SF Mono', Monaco, monospace; font-size: 14px; font-weight: 600; color: var(--error); min-width: 40px; }
+  .voice-waveform { flex: 1; display: flex; align-items: center; gap: 2px; height: 24px; }
+  .voice-waveform .bar {
+    width: 3px;
+    background: var(--error);
+    border-radius: 2px;
+    animation: wave 1.2s ease-in-out infinite;
+  }
+  .voice-waveform .bar:nth-child(1) { height: 30%; animation-delay: 0s; }
+  .voice-waveform .bar:nth-child(2) { height: 60%; animation-delay: 0.1s; }
+  .voice-waveform .bar:nth-child(3) { height: 90%; animation-delay: 0.2s; }
+  .voice-waveform .bar:nth-child(4) { height: 100%; animation-delay: 0.3s; }
+  .voice-waveform .bar:nth-child(5) { height: 70%; animation-delay: 0.4s; }
+  .voice-waveform .bar:nth-child(6) { height: 50%; animation-delay: 0.5s; }
+  .voice-waveform .bar:nth-child(7) { height: 80%; animation-delay: 0.6s; }
+  .voice-waveform .bar:nth-child(8) { height: 40%; animation-delay: 0.7s; }
+  .voice-waveform .bar:nth-child(9) { height: 90%; animation-delay: 0.8s; }
+  .voice-waveform .bar:nth-child(10) { height: 60%; animation-delay: 0.9s; }
+  .voice-waveform .bar:nth-child(11) { height: 30%; animation-delay: 1s; }
+  .voice-waveform .bar:nth-child(12) { height: 70%; animation-delay: 1.1s; }
+  @keyframes wave { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+  .voice-mic-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .voice-mic-btn:hover { background: var(--primary-hover); transform: scale(1.05); }
+  .voice-mic-btn.recording { background: var(--error); animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.4); } 50% { box-shadow: 0 0 0 12px rgba(220,38,38,0); } }
+  .voice-hint { font-size: 12px; color: var(--text-subtle); text-align: center; margin-top: 8px; }
+
+  /* ===== 20. Voice Message ===== */
+  .voice-msg {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .voice-msg-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .voice-msg-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  .voice-msg-player { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
+  .voice-play-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .voice-msg-wave { flex: 1; display: flex; align-items: center; gap: 2px; height: 24px; }
+  .voice-msg-wave .bar {
+    width: 2.5px; border-radius: 2px;
+    background: var(--text-subtle);
+  }
+  .voice-msg-wave .bar.played { background: var(--primary); }
+  .voice-msg-time { font-size: 12px; color: var(--text-muted); font-family: 'SF Mono', Monaco, monospace; min-width: 70px; text-align: right; }
+  .voice-msg-speed {
+    font-size: 11px; padding: 3px 8px;
+    background: var(--bg-soft); border-radius: 999px;
+    color: var(--text-muted); font-weight: 500;
+  }
+  .voice-transcript {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 700px) {
+    .page-header { padding: 32px 20px 56px; }
+    .page-header h1 { font-size: 28px; }
+    main { padding: 0 16px; }
+    .multi-grid { grid-template-columns: 1fr; }
+    .yesno-grid { grid-template-columns: 1fr; }
+    .card-wrapper { margin-left: 0; }
+    .agent-row { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-header-inner">
+    <h1>Ganttsy — Chat Card Catalog</h1>
+    <p>20 visual UI cards the AI agent can render within the chat. Hover and click to feel the interactions. Use as a reference for designing the actual components in Figma or React.</p>
+    <div class="meta">
+      <span>DD-001 · DRAFT</span>
+      <span>·</span>
+      <span>20 cards across 5 categories</span>
+      <span>·</span>
+      <span>V1 · V2 · V3 priority bands</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="filter-bar">
+    <button class="filter-chip active" onclick="filterCat('all', this)">All cards (20)</button>
+    <button class="filter-chip" onclick="filterCat('input', this)">Input (11)</button>
+    <button class="filter-chip" onclick="filterCat('confirm', this)">Confirmation (1)</button>
+    <button class="filter-chip" onclick="filterCat('nav', this)">Navigation (2)</button>
+    <button class="filter-chip" onclick="filterCat('display', this)">Display (3)</button>
+    <button class="filter-chip" onclick="filterCat('tool', this)">Tool Result (3)</button>
+  </div>
+
+  <!-- ============== INPUT ============== -->
+  <section class="category-section" data-cat="input">
+    <div class="category-header">
+      <h2>Input Cards</h2>
+      <span class="count">11 cards</span>
+    </div>
+
+    <!-- 1. Single Choice -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>1. Single Choice</h3><code>single_choice</code></div>
+        <div class="spec-meta"><span class="badge badge-v1">V1</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Project categorization, experience level, material selection. Renders as inline cards (3-6 options) or radio buttons (2-3 options).</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            How big is this project?
+            <div class="context">This helps me tailor the level of detail in your plan.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="choice-list">
+              <button class="choice-option" onclick="pickSingle(this)">
+                <div class="icon-box">○</div>
+                <div class="content">
+                  <div class="label">Small</div>
+                  <div class="desc">5-10 tasks, completes in days</div>
+                </div>
+                <div class="check"></div>
+              </button>
+              <button class="choice-option selected" onclick="pickSingle(this)">
+                <div class="icon-box">▢</div>
+                <div class="content">
+                  <div class="label">Medium</div>
+                  <div class="desc">15-25 tasks, completes in weeks</div>
+                </div>
+                <div class="check"></div>
+              </button>
+              <button class="choice-option" onclick="pickSingle(this)">
+                <div class="icon-box">⬡</div>
+                <div class="content">
+                  <div class="label">Large</div>
+                  <div class="desc">30+ tasks, completes in months</div>
+                </div>
+                <div class="check"></div>
+              </button>
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Continue</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Yes/No -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>2. Yes / No</h3><code>yes_no</code></div>
+        <div class="spec-meta"><span class="badge badge-v1">V1</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Scope transitions, binary decisions, confirmations. Side-by-side buttons with consequence preview text.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            Would you like to switch to Project scope to discuss cross-phase priorities?
+            <div class="context">Your question about phase dependencies requires broader context.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="yesno-grid">
+              <button class="yesno-btn yes">
+                <div class="yn-label">✓ Switch Scope</div>
+                <div class="yn-conseq">I'll load all project phases into our conversation.</div>
+              </button>
+              <button class="yesno-btn no">
+                <div class="yn-label">✕ Stay Here</div>
+                <div class="yn-conseq">I'll answer with limited context from this step only.</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. Slider -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>3. Slider</h3><code>slider</code></div>
+        <div class="spec-meta"><span class="badge badge-v1">V1</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Importance rating, energy commitment, budget range. Shows current value as a tooltip + labels at min/max/middle.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">How important is completing this project to you?</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="slider-track">
+              <div class="slider-fill"></div>
+              <div class="slider-thumb">
+                <div class="slider-value-bubble">3 — Important</div>
+              </div>
+            </div>
+            <div class="slider-labels">
+              <span>Nice to have</span>
+              <span>Important</span>
+              <span>Critical</span>
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Set priority</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4. Date Picker -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>4. Date Picker</h3><code>date_picker</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Deadlines, milestones, start dates. Includes "no specific deadline" escape hatch and a relative-date helper ("in 47 days").</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            When do you want to complete this project?
+            <div class="context">I'll work backwards from this date to create your timeline.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="date-input-wrap">
+              <span class="date-icon">📅</span>
+              <input type="date" class="date-input" value="2026-06-13" />
+            </div>
+            <div class="date-relative">→ in 47 days</div>
+            <label class="date-toggle">
+              <span class="date-checkbox"></span>
+              No specific deadline
+            </label>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Set deadline</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5. Time Picker -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>5. Time Picker</h3><code>time_picker</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Daily check-in time, notification preferences. Big readable display + quick-pick pills for common times.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            What time should I check in with you daily?
+            <div class="context">I'll send you a brief progress check and today's priorities.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="time-display">
+              <div class="time-big">9:00</div>
+              <div class="time-period">AM · every day</div>
+            </div>
+            <div class="time-dial">
+              <button class="time-pill">7:00 AM</button>
+              <button class="time-pill">8:00 AM</button>
+              <button class="time-pill active">9:00 AM</button>
+              <button class="time-pill">10:00 AM</button>
+              <button class="time-pill">12:00 PM</button>
+              <button class="time-pill">6:00 PM</button>
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Confirm time</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 8. Deferred Item -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>8. Deferred Item</h3><code>deferred_item</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Questions the user can't answer yet. Three actions: answer now, defer (creates follow-up task), or skip.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            How much direct sunlight does your garden get per day?
+            <div class="context">This affects which plants will thrive.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="deferred-actions">
+              <button class="btn btn-primary btn-lg btn-block">✓ I Know This</button>
+              <button class="btn btn-secondary btn-lg btn-block">⏱ I'll Measure It — adds task</button>
+              <button class="btn btn-ghost btn-lg btn-block">→ Not Important — skip</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 9. Multi-Select -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>9. Multi-Select</h3><code>multi_select</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Tool inventory, skill selection, multiple reasons. Grid of checkbox cards with min/max enforcement.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            Which of these tools do you already have?
+            <div class="context">I'll add missing tools to your shopping list.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="multi-grid">
+              <button class="multi-option selected" onclick="this.classList.toggle('selected')">
+                <span class="multi-checkbox"></span>
+                <span class="ml">🔧 Power Drill</span>
+              </button>
+              <button class="multi-option" onclick="this.classList.toggle('selected')">
+                <span class="multi-checkbox"></span>
+                <span class="ml">⚙️ Circular Saw</span>
+              </button>
+              <button class="multi-option selected" onclick="this.classList.toggle('selected')">
+                <span class="multi-checkbox"></span>
+                <span class="ml">📐 Level</span>
+              </button>
+              <button class="multi-option selected" onclick="this.classList.toggle('selected')">
+                <span class="multi-checkbox"></span>
+                <span class="ml">📏 Tape Measure</span>
+              </button>
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Confirm 3 selected</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 10. Text Input -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>10. Text Input</h3><code>text_input</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Custom answers, project names, free-form notes. Supports inline + multiline with character counter.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">What would you like to call this project?</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <input type="text" class="text-input" placeholder="e.g., Kitchen Renovation 2026" value="Backyard Vegetable Garden" oninput="updateCounter(this)" />
+            <div class="text-counter"><span id="charCount">26</span> / 100</div>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Save name</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 16. Acknowledge List -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>16. Acknowledge List</h3><code>acknowledge_list</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Quit-reasons awareness, risk acknowledgment. Each item is checkable + expandable for more detail.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Before we plan, let's get on guard for the things that derail projects.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="card-question">Why Projects Sometimes Fail</div>
+            <div class="ack-intro">To succeed, you need to understand what stands in your way. We'll be on guard for each of these.</div>
+
+            <div class="ack-item acknowledged">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content">
+                  <div class="ack-label">📅 Poor Planning</div>
+                  <div class="ack-desc">Starting without clear milestones or timeline</div>
+                </div>
+                <span class="ack-expand">▾</span>
+              </div>
+              <div class="ack-body">Projects without structured phases and checkpoints are 3× more likely to be abandoned. We'll create a clear roadmap together.</div>
+            </div>
+
+            <div class="ack-item acknowledged">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content">
+                  <div class="ack-label">🔋 Loss of Motivation</div>
+                  <div class="ack-desc">Initial enthusiasm fading over time</div>
+                </div>
+                <span class="ack-expand">▸</span>
+              </div>
+              <div class="ack-body hidden">Motivation naturally fluctuates. Daily check-ins and celebrating small wins help maintain momentum.</div>
+            </div>
+
+            <div class="ack-item">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content">
+                  <div class="ack-label">❓ Skill Gaps</div>
+                  <div class="ack-desc">Encountering tasks beyond current abilities</div>
+                </div>
+                <span class="ack-expand">▸</span>
+              </div>
+              <div class="ack-body hidden">We'll identify skills you need upfront and suggest resources or experts when you hit roadblocks.</div>
+            </div>
+
+            <div class="ack-item">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content">
+                  <div class="ack-label">⏱ Underestimating Time</div>
+                  <div class="ack-desc">Tasks taking longer than expected</div>
+                </div>
+                <span class="ack-expand">▸</span>
+              </div>
+              <div class="ack-body hidden">We'll build buffer time into your schedule and adjust plans dynamically as reality unfolds.</div>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">I'm Aware of These Risks</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 17. Inventory Checklist -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>17. Inventory Checklist</h3><code>inventory_checklist</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Tool / material / skill inventory with Have / Need / N/A state per item + cost estimates + custom additions.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            Let's see what tools you already have.
+            <div class="context">I'll add items you need to your shopping list with price estimates.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="inv-item have">
+              <div class="inv-icon">🔧</div>
+              <div class="inv-info">
+                <div class="inv-label">Power Drill <span class="inv-essential">Essential</span></div>
+                <div class="inv-meta">Cordless preferred · $50–150</div>
+              </div>
+              <div class="inv-states">
+                <button class="inv-state-btn active have" onclick="setInvState(this, 'have')">Have</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'need')">Need</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'na')">N/A</button>
+              </div>
+            </div>
+
+            <div class="inv-item need">
+              <div class="inv-icon">⚙️</div>
+              <div class="inv-info">
+                <div class="inv-label">Circular Saw <span class="inv-essential">Essential</span></div>
+                <div class="inv-meta">$80–200</div>
+              </div>
+              <div class="inv-states">
+                <button class="inv-state-btn" onclick="setInvState(this, 'have')">Have</button>
+                <button class="inv-state-btn active need" onclick="setInvState(this, 'need')">Need</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'na')">N/A</button>
+              </div>
+            </div>
+
+            <div class="inv-item have">
+              <div class="inv-icon">📐</div>
+              <div class="inv-info">
+                <div class="inv-label">Level</div>
+                <div class="inv-meta">$10–40</div>
+              </div>
+              <div class="inv-states">
+                <button class="inv-state-btn active have" onclick="setInvState(this, 'have')">Have</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'need')">Need</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'na')">N/A</button>
+              </div>
+            </div>
+
+            <button class="inv-add">+ Add another tool you'll need…</button>
+
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Continue (1 to buy · ~$140)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 19. Voice Note Input -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>19. Voice Note Input</h3><code>voice_note_input</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Hands-free dictation. WhatsApp-style hold-to-record with slide-to-cancel + slide-up-to-lock.</div>
+      <div class="chat-mock">
+        <!-- Idle state -->
+        <div class="card-wrapper" style="margin-left: 0; margin-bottom: 24px;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Idle</div>
+          <div class="voice-input-wrap">
+            <div class="voice-text">Hold to record a voice message…</div>
+            <button class="voice-mic-btn">🎤</button>
+          </div>
+          <div class="voice-hint">Press and hold the mic to start. Release to send.</div>
+        </div>
+
+        <!-- Recording state -->
+        <div class="card-wrapper" style="margin-left: 0;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Recording</div>
+          <div class="voice-input-wrap recording">
+            <div class="voice-recording-content">
+              <span class="voice-timer">0:08</span>
+              <div class="voice-waveform">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+              </div>
+            </div>
+            <button class="voice-mic-btn recording">⬜</button>
+          </div>
+          <div class="voice-hint">← Slide to cancel · Slide up 🔒 to lock hands-free</div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============== CONFIRMATION ============== -->
+  <section class="category-section" data-cat="confirm">
+    <div class="category-header">
+      <h2>Confirmation Cards</h2>
+      <span class="count">1 card</span>
+    </div>
+
+    <!-- 6. Summary Confirmation -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>6. Summary Confirmation</h3><code>summary_confirmation</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Step completion, memory commit, phase transitions. Lists prior decisions with per-item edit affordance.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Let's lock these in. You can edit any line before confirming.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="summary-title-row">
+              <div class="summary-icon-box">✓</div>
+              <div>
+                <div class="card-question" style="margin: 0;">Ready to Complete Project Setup?</div>
+                <div style="font-size: 12px; color: var(--text-muted);">4 decisions ready to save</div>
+              </div>
+            </div>
+
+            <div class="summary-list">
+              <div class="summary-item">
+                <span class="summary-label">Daily check-in</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span class="summary-value">9:00 AM</span>
+                  <button class="summary-edit">edit</button>
+                </div>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Target completion</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span class="summary-value">March 15, 2026</span>
+                  <button class="summary-edit">edit</button>
+                </div>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Priority level</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span class="summary-value">High (4 / 5)</span>
+                  <button class="summary-edit">edit</button>
+                </div>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Time commitment</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span class="summary-value">2 hours / day</span>
+                  <button class="summary-edit">edit</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn btn-secondary">Cancel</button>
+              <button class="btn btn-primary" style="flex: 1;">Looks Good!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============== NAVIGATION ============== -->
+  <section class="category-section" data-cat="nav">
+    <div class="category-header">
+      <h2>Navigation Cards</h2>
+      <span class="count">2 cards</span>
+    </div>
+
+    <!-- 7. Scope Selector -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>7. Scope Selector</h3><code>scope_selector</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Changing conversation scope (REQ-108). User → Project → Phase → Step hierarchy with descriptions of context loaded.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Your question about budget affects multiple phases. Switch to Project scope?</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="scope-current">📍 Currently focused on: Step</div>
+            <div class="scope-list">
+              <button class="scope-option">
+                <span class="scope-level-tag">User</span>
+                <div class="scope-info">
+                  <div class="label">All Projects</div>
+                  <div class="desc">Full life context</div>
+                </div>
+              </button>
+              <button class="scope-option">
+                <span class="scope-level-tag">Project</span>
+                <div class="scope-info">
+                  <div class="label">Kitchen Renovation</div>
+                  <div class="desc">All phases</div>
+                </div>
+              </button>
+              <button class="scope-option">
+                <span class="scope-level-tag">Phase</span>
+                <div class="scope-info">
+                  <div class="label">Phase 2: Execution</div>
+                  <div class="desc">Current phase</div>
+                </div>
+              </button>
+              <button class="scope-option current">
+                <span class="scope-level-tag">Step</span>
+                <div class="scope-info">
+                  <div class="label">Install Flooring</div>
+                  <div class="desc">Focused task — you are here</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 18. Setup Mode Toggle -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>18. Setup Mode Toggle</h3><code>setup_mode_toggle</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Returning users skip the verbose intro. Default mode adapts to <code>user_project_count</code> — first-timers see "Full", veterans see "Quick".</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">How would you like to set up this project? You've done this before, so I'll default to Quick.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <button class="setup-mode" onclick="pickSetup(this)">
+              <div class="setup-mode-head">
+                <span class="setup-radio"></span>
+                <span class="setup-mode-label">Full Walkthrough</span>
+                <span class="setup-mode-time">5–10 min</span>
+              </div>
+              <div class="setup-mode-desc">Guided setup with explanations for each step</div>
+              <div class="setup-mode-rec">★ First-time users or complex projects</div>
+            </button>
+
+            <button class="setup-mode selected" onclick="pickSetup(this)">
+              <div class="setup-mode-head">
+                <span class="setup-radio"></span>
+                <span class="setup-mode-label">Quick Setup</span>
+                <span class="setup-mode-time">2–3 min</span>
+              </div>
+              <div class="setup-mode-desc">Just the essential questions, no explanations</div>
+              <div class="setup-mode-rec">★ Recommended for you (3rd project)</div>
+            </button>
+
+            <button class="setup-mode" onclick="pickSetup(this)">
+              <div class="setup-mode-head">
+                <span class="setup-radio"></span>
+                <span class="setup-mode-label">Minimal</span>
+                <span class="setup-mode-time">30 sec</span>
+              </div>
+              <div class="setup-mode-desc">Project name and deadline only — fill in details later</div>
+            </button>
+
+            <div class="card-actions">
+              <button class="btn btn-primary btn-block">Start Quick Setup</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============== DISPLAY ============== -->
+  <section class="category-section" data-cat="display">
+    <div class="category-header">
+      <h2>Display Cards</h2>
+      <span class="count">3 cards</span>
+    </div>
+
+    <!-- 11. Product Card -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>11. Product Card</h3><code>product_card</code></div>
+        <div class="spec-meta"><span class="badge badge-v3">V3</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Shopping list items, resource recommendations. Tier badge (primary/secondary/tertiary), price range, affiliate link.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Here's the drill I'd recommend for this project — fits your budget and works with the bits you already own.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card" style="max-width: 320px;">
+            <div class="product-image">🔧</div>
+            <div class="product-tier primary">Essential</div>
+            <div class="product-name">DEWALT 20V MAX Cordless Drill</div>
+            <div class="product-desc">2-speed compact drill with 1/2" chuck. Battery + charger included.</div>
+            <div class="product-price">$89 – $129</div>
+            <div class="product-price-range">Estimated price range</div>
+            <div class="card-actions">
+              <button class="btn btn-secondary">Learn more</button>
+              <button class="btn btn-primary" style="flex: 1;">+ Add to cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 12. Progress Card -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>12. Progress Card</h3><code>progress_card</code></div>
+        <div class="spec-meta"><span class="badge badge-v3">V3</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Task completion, milestone tracking. Status pill (not_started / in_progress / blocked / completed) + progress bar + due date.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Quick status on Phase 2 — Execution. You're on pace.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="progress-header">
+              <div class="progress-title">Phase 2: Execution</div>
+              <span class="progress-status in-progress">In progress</span>
+            </div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width: 64%;"></div>
+            </div>
+            <div class="progress-stats">
+              <span><strong style="color: var(--text);">9 of 14</strong> tasks complete</span>
+              <span>64%</span>
+            </div>
+            <div class="progress-due">
+              📅 Due <strong style="color: var(--text);">May 22, 2026</strong> · 25 days remaining
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 20. Voice Message -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>20. Voice Message</h3><code>voice_message</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Playable agent voice responses. Transcript always visible (accessibility); waveform shows played/unplayed; speed control.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble" style="padding: 0; background: transparent; border: none; box-shadow: none;">
+            <div class="voice-msg" style="min-width: 360px;">
+              <div class="voice-msg-header">
+                <span style="font-size: 11px; padding: 3px 8px; background: var(--primary-soft); color: var(--primary); border-radius: 999px; font-weight: 600;">PROJECT INTRO</span>
+                <span class="voice-msg-label">Voice message</span>
+              </div>
+              <div class="voice-msg-player">
+                <button class="voice-play-btn">▶</button>
+                <div class="voice-msg-wave">
+                  <div class="bar played" style="height: 30%;"></div>
+                  <div class="bar played" style="height: 60%;"></div>
+                  <div class="bar played" style="height: 80%;"></div>
+                  <div class="bar played" style="height: 50%;"></div>
+                  <div class="bar played" style="height: 90%;"></div>
+                  <div class="bar played" style="height: 40%;"></div>
+                  <div class="bar played" style="height: 70%;"></div>
+                  <div class="bar played" style="height: 60%;"></div>
+                  <div class="bar" style="height: 80%;"></div>
+                  <div class="bar" style="height: 30%;"></div>
+                  <div class="bar" style="height: 70%;"></div>
+                  <div class="bar" style="height: 50%;"></div>
+                  <div class="bar" style="height: 60%;"></div>
+                  <div class="bar" style="height: 40%;"></div>
+                  <div class="bar" style="height: 80%;"></div>
+                  <div class="bar" style="height: 30%;"></div>
+                  <div class="bar" style="height: 60%;"></div>
+                  <div class="bar" style="height: 70%;"></div>
+                </div>
+                <span class="voice-msg-time">0:18 / 0:45</span>
+                <button class="voice-msg-speed">1×</button>
+              </div>
+              <div class="voice-transcript">"Welcome to your first project! I'm excited to help you build your vegetable garden. Before we dive into planning, let's establish a few things that will set us up for success."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============== TOOL RESULT ============== -->
+  <section class="category-section" data-cat="tool">
+    <div class="category-header">
+      <h2>Tool Result Cards</h2>
+      <span class="count">3 cards</span>
+    </div>
+
+    <!-- 13. Tool Result -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>13. Tool Result</h3><code>tool_result</code></div>
+        <div class="spec-meta"><span class="badge badge-v1">V1</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Web search, database lookup, API calls. Industry-standard collapsible pattern (OpenAI / MCP). Default = collapsed.</div>
+      <div class="chat-mock">
+
+        <!-- Collapsed -->
+        <div class="card-wrapper" style="margin-left: 0; margin-bottom: 16px;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Collapsed (default)</div>
+          <div class="tool-card">
+            <div class="tool-header collapsed" onclick="toggleTool(this)">
+              <div class="tool-icon">🔍</div>
+              <div class="tool-summary">
+                <div class="ts-name">Searched web for "garden soil types"</div>
+                <div class="ts-meta">3 results · 1.2s</div>
+              </div>
+              <span class="tool-status-icon">✓</span>
+              <span class="tool-chevron">▾</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expanded -->
+        <div class="card-wrapper" style="margin-left: 0;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Expanded</div>
+          <div class="tool-card">
+            <div class="tool-header" onclick="toggleTool(this)">
+              <div class="tool-icon">🔍</div>
+              <div class="tool-summary">
+                <div class="ts-name">Web Search</div>
+                <div class="ts-meta">"garden soil types" · 3 results · 1.2s</div>
+              </div>
+              <span class="tool-status-icon">✓</span>
+              <span class="tool-chevron">▾</span>
+            </div>
+            <div class="tool-body">
+              <div class="tool-meta-row">
+                <span><strong>Query:</strong> garden soil types</span>
+                <span><strong>Duration:</strong> 1.2s</span>
+              </div>
+
+              <div class="tool-citation">
+                <div class="ct-title">Types of Garden Soil — gardenguide.com</div>
+                <div class="ct-snippet">"There are six main types of soil: clay, sandy, silty, peaty, chalky, and loamy. Each has distinct drainage and nutrient properties..."</div>
+              </div>
+              <div class="tool-citation">
+                <div class="ct-title">Soil pH and Your Garden — extension.edu</div>
+                <div class="ct-snippet">"Understanding soil composition starts with a pH test. Most vegetables thrive between 6.0 and 7.0..."</div>
+              </div>
+              <div class="tool-citation">
+                <div class="ct-title">Picking Soil for Raised Beds — modernfarmer.com</div>
+                <div class="ct-snippet">"For raised garden beds, a mix of 60% topsoil, 30% compost, and 10% potting soil produces the best yields..."</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading state -->
+        <div class="card-wrapper" style="margin-left: 0; margin-top: 16px;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Running</div>
+          <div class="tool-card">
+            <div class="tool-header collapsed">
+              <div class="tool-icon">🔍</div>
+              <div class="tool-summary">
+                <div class="ts-name">Searching web…</div>
+                <div class="ts-meta">"raised bed dimensions"</div>
+              </div>
+              <div class="handoff-spinner"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="card-wrapper" style="margin-left: 0; margin-top: 16px;">
+          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Error</div>
+          <div class="tool-card" style="border-color: var(--error);">
+            <div class="tool-header collapsed" style="background: var(--error-soft);">
+              <div class="tool-icon" style="color: var(--error);">⚠</div>
+              <div class="tool-summary">
+                <div class="ts-name" style="color: var(--error);">Failed to fetch weather data</div>
+                <div class="ts-meta">API timeout after 5s</div>
+              </div>
+              <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;">Retry</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 14. Agent Handoff -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>14. Agent Handoff</h3><code>agent_handoff</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Orchestrator delegating to a specialized agent. Visualizes the routing so the user understands which "brain" is responding.</div>
+      <div class="chat-mock">
+        <div class="card-wrapper" style="margin-left: 0;">
+          <div class="handoff-card">
+            <div class="handoff-from">🤖</div>
+            <span class="handoff-arrow">→</span>
+            <div class="handoff-to">📊</div>
+            <div class="handoff-info">
+              <div class="handoff-title">Project Intelligence Agent</div>
+              <div class="handoff-reason">Analyzing project requirements and dependencies…</div>
+            </div>
+            <div class="handoff-spinner"></div>
+          </div>
+        </div>
+
+        <div class="card-wrapper" style="margin-left: 0; margin-top: 12px;">
+          <div class="handoff-card" style="background: linear-gradient(135deg, #D1FAE5, #ECFDF5); border-color: #A7F3D0;">
+            <div class="handoff-from">🤖</div>
+            <span class="handoff-arrow" style="color: var(--success);">←</span>
+            <div class="handoff-to">🔬</div>
+            <div class="handoff-info">
+              <div class="handoff-title">Research Agent returned results</div>
+              <div class="handoff-reason">Found 4 relevant sources in 2.8s</div>
+            </div>
+            <span style="color: var(--success); font-size: 18px;">✓</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 15. Memory Write -->
+    <article class="card-spec">
+      <div class="spec-header">
+        <div class="spec-title"><h3>15. Memory Write</h3><code>memory_write</code></div>
+        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
+      </div>
+      <div class="spec-usecase"><strong>Use case:</strong> Storing decisions to project / user / phase / step memory (REQ-111). Visible commit so users feel in control of "what the agent knows".</div>
+      <div class="chat-mock">
+        <div class="card-wrapper" style="margin-left: 0;">
+          <div class="memory-card">
+            <div class="memory-icon">💾</div>
+            <div class="memory-info">
+              <div class="memory-title">Saved to Project Memory</div>
+              <div class="memory-value">"Deadline: March 30, 2026"</div>
+            </div>
+            <span class="memory-time">just now</span>
+          </div>
+        </div>
+
+        <div class="card-wrapper" style="margin-left: 0; margin-top: 12px;">
+          <div class="memory-card">
+            <div class="memory-icon" style="background: linear-gradient(135deg, #DBEAFE, #BFDBFE);">🧠</div>
+            <div class="memory-info">
+              <div class="memory-title">Updated User Memory</div>
+              <div class="memory-value">"Prefers 9 AM daily check-ins" · was: "morning"</div>
+            </div>
+            <span class="memory-time">2m ago</span>
+          </div>
+        </div>
+
+        <div class="card-wrapper" style="margin-left: 0; margin-top: 12px;">
+          <div class="memory-card" style="border-color: var(--warning); background: var(--warning-soft);">
+            <div class="memory-icon">⏳</div>
+            <div class="memory-info">
+              <div class="memory-title">Pending memory commit</div>
+              <div class="memory-value">"Budget cap: $2,500" — awaiting your confirmation</div>
+            </div>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <footer style="text-align: center; color: var(--text-subtle); font-size: 13px; padding: 32px 0;">
+    Ganttsy DD-001 · Chat Card Catalog · 20 cards · Generated reference
+  </footer>
+
+</main>
+
+<script>
+  function filterCat(cat, btn) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.category-section').forEach(s => {
+      s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+
+  function pickSingle(el) {
+    el.parentElement.querySelectorAll('.choice-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function toggleAck(headerEl) {
+    const item = headerEl.parentElement;
+    const body = item.querySelector('.ack-body');
+    const expand = headerEl.querySelector('.ack-expand');
+    item.classList.toggle('acknowledged');
+    body.classList.toggle('hidden');
+    expand.textContent = body.classList.contains('hidden') ? '▸' : '▾';
+  }
+
+  function setInvState(btn, state) {
+    const wrap = btn.closest('.inv-item');
+    wrap.classList.remove('have', 'need');
+    if (state === 'have') wrap.classList.add('have');
+    if (state === 'need') wrap.classList.add('need');
+    btn.parentElement.querySelectorAll('.inv-state-btn').forEach(b => {
+      b.classList.remove('active', 'have', 'need', 'na');
+    });
+    btn.classList.add('active', state);
+  }
+
+  function pickSetup(el) {
+    el.parentElement.querySelectorAll('.setup-mode').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function toggleTool(headerEl) {
+    headerEl.classList.toggle('collapsed');
+    const body = headerEl.parentElement.querySelector('.tool-body');
+    if (body) body.classList.toggle('hidden');
+  }
+
+  function updateCounter(input) {
+    document.getElementById('charCount').textContent = input.value.length;
+  }
+</script>
+
+</body>
+</html>
