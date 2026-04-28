@@ -993,12 +993,12 @@
 
 <header class="page-header">
   <div class="page-header-inner">
-    <h1>Ganttsy — Chat Card Catalog</h1>
-    <p>20 visual UI cards the AI agent can render within the chat. Hover and click to feel the interactions. Use as a reference for designing the actual components in Figma or React.</p>
+    <h1>Ganttsy — UI Intent Components</h1>
+    <p>11 React widgets the AI agent can render within the chat. Hover and click to feel the interactions. Use as a reference for designing the actual components.</p>
     <div class="meta">
-      <span>DD-001 · DRAFT</span>
+      <span>UI Intent Components</span>
       <span>·</span>
-      <span>21 cards across 5 categories</span>
+      <span>11 widgets across 4 categories</span>
       <span>·</span>
       <span>V1 · V2 · V3 priority bands</span>
     </div>
@@ -1008,12 +1008,11 @@
 <main>
 
   <div class="filter-bar">
-    <button class="filter-chip active" onclick="filterCat('all', this)">All cards (21)</button>
-    <button class="filter-chip" onclick="filterCat('input', this)">Input (11)</button>
+    <button class="filter-chip active" onclick="filterCat('all', this)">All widgets (11)</button>
+    <button class="filter-chip" onclick="filterCat('input', this)">Input (8)</button>
     <button class="filter-chip" onclick="filterCat('confirm', this)">Confirmation (1)</button>
-    <button class="filter-chip" onclick="filterCat('nav', this)">Navigation (2)</button>
-    <button class="filter-chip" onclick="filterCat('display', this)">Display (4)</button>
-    <button class="filter-chip" onclick="filterCat('tool', this)">Tool Result (3)</button>
+    <button class="filter-chip" onclick="filterCat('nav', this)">Navigation (1)</button>
+    <button class="filter-chip" onclick="filterCat('display', this)">Display (1)</button>
   </div>
 
   <div class="intent-section">
@@ -1052,7 +1051,7 @@
   <section class="category-section" data-cat="input">
     <div class="category-header">
       <h2>Input Cards</h2>
-      <span class="count">11 cards</span>
+      <span class="count">8 widgets</span>
     </div>
 
     <!-- 1. Single Choice -->
@@ -1306,33 +1305,6 @@
       </div>
     </article>
 
-    <!-- 8. Deferred Item -->
-    <article class="card-spec">
-      <div class="spec-header">
-        <div class="spec-title"><h3>8. Deferred Item</h3><code>deferred_item</code></div>
-        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
-      </div>
-      <div class="spec-usecase"><strong>Use case:</strong> Questions the user can't answer yet. Three actions: answer now, defer (creates follow-up task), or skip.</div>
-      <div class="chat-mock">
-        <div class="agent-row">
-          <div class="agent-avatar">G</div>
-          <div class="agent-bubble">
-            How much direct sunlight does your garden get per day?
-            <div class="context">This affects which plants will thrive.</div>
-          </div>
-        </div>
-        <div class="card-wrapper">
-          <div class="ui-card">
-            <div class="deferred-actions">
-              <button class="btn btn-primary btn-lg btn-block">✓ I Know This</button>
-              <button class="btn btn-secondary btn-lg btn-block">⏱ I'll Measure It — adds task</button>
-              <button class="btn btn-ghost btn-lg btn-block">→ Not Important — skip</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
-
     <!-- 9. Multi-Select -->
     <article class="card-spec">
       <div class="spec-header">
@@ -1370,30 +1342,6 @@
             </div>
             <div class="card-actions">
               <button class="btn btn-primary btn-block">Confirm 3 selected</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- 10. Text Input -->
-    <article class="card-spec">
-      <div class="spec-header">
-        <div class="spec-title"><h3>10. Text Input</h3><code>text_input</code></div>
-        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
-      </div>
-      <div class="spec-usecase"><strong>Use case:</strong> Custom answers, project names, free-form notes. Supports inline + multiline with character counter.</div>
-      <div class="chat-mock">
-        <div class="agent-row">
-          <div class="agent-avatar">G</div>
-          <div class="agent-bubble">What would you like to call this project?</div>
-        </div>
-        <div class="card-wrapper">
-          <div class="ui-card">
-            <input type="text" class="text-input" placeholder="e.g., Kitchen Renovation 2026" value="Backyard Vegetable Garden" oninput="updateCounter(this)" />
-            <div class="text-counter"><span id="charCount">26</span> / 100</div>
-            <div class="card-actions">
-              <button class="btn btn-primary btn-block">Save name</button>
             </div>
           </div>
         </div>
@@ -1539,42 +1487,6 @@
       </div>
     </article>
 
-    <!-- 19. Voice Note Input -->
-    <article class="card-spec">
-      <div class="spec-header">
-        <div class="spec-title"><h3>19. Voice Note Input</h3><code>voice_note_input</code></div>
-        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
-      </div>
-      <div class="spec-usecase"><strong>Use case:</strong> Hands-free dictation. WhatsApp-style hold-to-record with slide-to-cancel + slide-up-to-lock.</div>
-      <div class="chat-mock">
-        <!-- Idle state -->
-        <div class="card-wrapper" style="margin-left: 0; margin-bottom: 24px;">
-          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Idle</div>
-          <div class="voice-input-wrap">
-            <div class="voice-text">Hold to record a voice message…</div>
-            <button class="voice-mic-btn">🎤</button>
-          </div>
-          <div class="voice-hint">Press and hold the mic to start. Release to send.</div>
-        </div>
-
-        <!-- Recording state -->
-        <div class="card-wrapper" style="margin-left: 0;">
-          <div style="font-size: 12px; color: var(--text-subtle); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;">Recording</div>
-          <div class="voice-input-wrap recording">
-            <div class="voice-recording-content">
-              <span class="voice-timer">0:08</span>
-              <div class="voice-waveform">
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-              </div>
-            </div>
-            <button class="voice-mic-btn recording">⬜</button>
-          </div>
-          <div class="voice-hint">← Slide to cancel · Slide up 🔒 to lock hands-free</div>
-        </div>
-      </div>
-    </article>
   </section>
 
   <!-- ============== CONFIRMATION ============== -->
@@ -1651,58 +1563,8 @@
   <section class="category-section" data-cat="nav">
     <div class="category-header">
       <h2>Navigation Cards</h2>
-      <span class="count">2 cards</span>
+      <span class="count">1 card</span>
     </div>
-
-    <!-- 7. Scope Selector -->
-    <article class="card-spec">
-      <div class="spec-header">
-        <div class="spec-title"><h3>7. Scope Selector</h3><code>scope_selector</code></div>
-        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
-      </div>
-      <div class="spec-usecase"><strong>Use case:</strong> Changing conversation scope (REQ-108). User → Project → Phase → Step hierarchy with descriptions of context loaded.</div>
-      <div class="chat-mock">
-        <div class="agent-row">
-          <div class="agent-avatar">G</div>
-          <div class="agent-bubble">Your question about budget affects multiple phases. Switch to Project scope?</div>
-        </div>
-        <div class="card-wrapper">
-          <div class="ui-card">
-            <div class="scope-current">📍 Currently focused on: Step</div>
-            <div class="scope-list">
-              <button class="scope-option">
-                <span class="scope-level-tag">User</span>
-                <div class="scope-info">
-                  <div class="label">All Projects</div>
-                  <div class="desc">Full life context</div>
-                </div>
-              </button>
-              <button class="scope-option">
-                <span class="scope-level-tag">Project</span>
-                <div class="scope-info">
-                  <div class="label">Kitchen Renovation</div>
-                  <div class="desc">All phases</div>
-                </div>
-              </button>
-              <button class="scope-option">
-                <span class="scope-level-tag">Phase</span>
-                <div class="scope-info">
-                  <div class="label">Phase 2: Execution</div>
-                  <div class="desc">Current phase</div>
-                </div>
-              </button>
-              <button class="scope-option current">
-                <span class="scope-level-tag">Step</span>
-                <div class="scope-info">
-                  <div class="label">Install Flooring</div>
-                  <div class="desc">Focused task — you are here</div>
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
 
     <!-- 18. Setup Mode Toggle -->
     <article class="card-spec">
@@ -1760,70 +1622,8 @@
   <section class="category-section" data-cat="display">
     <div class="category-header">
       <h2>Display Cards</h2>
-      <span class="count">4 cards</span>
+      <span class="count">1 card</span>
     </div>
-
-    <!-- 11. Product Card -->
-    <article class="card-spec">
-      <div class="spec-header">
-        <div class="spec-title"><h3>11. Product Card</h3><code>product_card</code></div>
-        <div class="spec-meta"><span class="badge badge-v3">V3</span></div>
-      </div>
-      <div class="spec-usecase"><strong>Use case:</strong> Shopping list items, resource recommendations. Tier badge (primary/secondary/tertiary), price range, affiliate link.</div>
-      <div class="chat-mock">
-        <div class="agent-row">
-          <div class="agent-avatar">G</div>
-          <div class="agent-bubble">Here's the drill I'd recommend for this project — fits your budget and works with the bits you already own.</div>
-        </div>
-        <div class="card-wrapper">
-          <div class="ui-card" style="max-width: 320px;">
-            <div class="product-image">🔧</div>
-            <div class="product-tier primary">Essential</div>
-            <div class="product-name">DEWALT 20V MAX Cordless Drill</div>
-            <div class="product-desc">2-speed compact drill with 1/2" chuck. Battery + charger included.</div>
-            <div class="product-price">$89 – $129</div>
-            <div class="product-price-range">Estimated price range</div>
-            <div class="card-actions">
-              <button class="btn btn-secondary">Learn more</button>
-              <button class="btn btn-primary" style="flex: 1;">+ Add to cart</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- 12. Progress Card -->
-    <article class="card-spec">
-      <div class="spec-header">
-        <div class="spec-title"><h3>12. Progress Card</h3><code>progress_card</code></div>
-        <div class="spec-meta"><span class="badge badge-v3">V3</span></div>
-      </div>
-      <div class="spec-usecase"><strong>Use case:</strong> Task completion, milestone tracking. Status pill (not_started / in_progress / blocked / completed) + progress bar + due date.</div>
-      <div class="chat-mock">
-        <div class="agent-row">
-          <div class="agent-avatar">G</div>
-          <div class="agent-bubble">Quick status on Phase 2 — Execution. You're on pace.</div>
-        </div>
-        <div class="card-wrapper">
-          <div class="ui-card">
-            <div class="progress-header">
-              <div class="progress-title">Phase 2: Execution</div>
-              <span class="progress-status in-progress">In progress</span>
-            </div>
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill" style="width: 64%;"></div>
-            </div>
-            <div class="progress-stats">
-              <span><strong style="color: var(--text);">9 of 14</strong> tasks complete</span>
-              <span>64%</span>
-            </div>
-            <div class="progress-due">
-              📅 Due <strong style="color: var(--text);">May 22, 2026</strong> · 25 days remaining
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
 
     <!-- 21. Level Up -->
     <article class="card-spec">
@@ -1891,57 +1691,10 @@
       </div>
     </article>
 
-    <!-- 20. Voice Message -->
-    <article class="card-spec">
-      <div class="spec-header">
-        <div class="spec-title"><h3>20. Voice Message</h3><code>voice_message</code></div>
-        <div class="spec-meta"><span class="badge badge-v2">V2</span></div>
-      </div>
-      <div class="spec-usecase"><strong>Use case:</strong> Playable agent voice responses. Transcript always visible (accessibility); waveform shows played/unplayed; speed control.</div>
-      <div class="chat-mock">
-        <div class="agent-row">
-          <div class="agent-avatar">G</div>
-          <div class="agent-bubble" style="padding: 0; background: transparent; border: none; box-shadow: none;">
-            <div class="voice-msg" style="min-width: 360px;">
-              <div class="voice-msg-header">
-                <span style="font-size: 11px; padding: 3px 8px; background: var(--primary-soft); color: var(--primary); border-radius: 999px; font-weight: 600;">PROJECT INTRO</span>
-                <span class="voice-msg-label">Voice message</span>
-              </div>
-              <div class="voice-msg-player">
-                <button class="voice-play-btn">▶</button>
-                <div class="voice-msg-wave">
-                  <div class="bar played" style="height: 30%;"></div>
-                  <div class="bar played" style="height: 60%;"></div>
-                  <div class="bar played" style="height: 80%;"></div>
-                  <div class="bar played" style="height: 50%;"></div>
-                  <div class="bar played" style="height: 90%;"></div>
-                  <div class="bar played" style="height: 40%;"></div>
-                  <div class="bar played" style="height: 70%;"></div>
-                  <div class="bar played" style="height: 60%;"></div>
-                  <div class="bar" style="height: 80%;"></div>
-                  <div class="bar" style="height: 30%;"></div>
-                  <div class="bar" style="height: 70%;"></div>
-                  <div class="bar" style="height: 50%;"></div>
-                  <div class="bar" style="height: 60%;"></div>
-                  <div class="bar" style="height: 40%;"></div>
-                  <div class="bar" style="height: 80%;"></div>
-                  <div class="bar" style="height: 30%;"></div>
-                  <div class="bar" style="height: 60%;"></div>
-                  <div class="bar" style="height: 70%;"></div>
-                </div>
-                <span class="voice-msg-time">0:18 / 0:45</span>
-                <button class="voice-msg-speed">1×</button>
-              </div>
-              <div class="voice-transcript">"Welcome to your first project! I'm excited to help you build your vegetable garden. Before we dive into planning, let's establish a few things that will set us up for success."</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>
   </section>
 
-  <!-- ============== TOOL RESULT ============== -->
-  <section class="category-section" data-cat="tool">
+  <!-- ============== TOOL RESULT (REMOVED — not in latest spec) ============== -->
+  <section class="category-section" data-cat="tool" style="display:none">
     <div class="category-header">
       <h2>Tool Result Cards</h2>
       <span class="count">3 cards</span>
@@ -2120,7 +1873,7 @@
   </section>
 
   <footer style="text-align: center; color: var(--text-subtle); font-size: 13px; padding: 32px 0;">
-    Ganttsy DD-001 · Chat Card Catalog · 21 cards · Generated reference
+    Ganttsy · UI Intent Components · 11 widgets · Generated reference
   </footer>
 
 </main>
