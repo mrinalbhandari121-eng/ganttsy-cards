@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ganttsy — Cards in design language</title>
+<title>Ganttsy — UI Intent Components</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,92 +17,103 @@
     --border-strong: #3A3A3A;
     --primary: #F59E0B;
     --primary-soft: #3D2817;
+    --primary-soft-2: #4D331C;
     --primary-hover: #FBA823;
     --success: #84CC16;
     --success-soft: #1F2D0E;
+    --warning: #FB923C;
+    --warning-soft: #3D2010;
+    --error: #EF4444;
+    --error-soft: #3D1414;
     --text: #FAFAFA;
     --text-muted: #A1A1AA;
     --text-subtle: #525252;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    color: var(--text);
-    background: var(--bg-page);
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
+  html, body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); background: var(--bg-page); line-height: 1.5; -webkit-font-smoothing: antialiased; }
   button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input { font-family: inherit; font-size: inherit; }
 
   /* ===== Layout ===== */
-  .header {
-    padding: 32px 32px 16px;
-    border-bottom: 1px solid var(--border);
-  }
+  .header { padding: 32px 32px 20px; border-bottom: 1px solid var(--border); }
   .header-inner { max-width: 1200px; margin: 0 auto; }
   .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
-  .header .sub { color: var(--text-muted); font-size: 14px; margin-top: 6px; }
-  .header .meta { margin-top: 12px; display: flex; gap: 14px; font-size: 12px; color: var(--text-subtle); }
+  .header .sub { color: var(--text-muted); font-size: 14px; margin-top: 6px; max-width: 720px; }
+  .header .meta { margin-top: 12px; display: flex; gap: 14px; font-size: 12px; color: var(--text-subtle); align-items: center; }
   .header .meta .pill { background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 999px; }
 
   main { max-width: 1200px; margin: 32px auto 80px; padding: 0 32px; }
 
-  .toggle-bar {
-    display: flex; gap: 8px;
-    margin-bottom: 32px;
+  .filter-bar {
+    display: flex; gap: 6px; flex-wrap: wrap;
     background: var(--bg-card);
     padding: 6px;
-    border-radius: 14px;
+    border-radius: 6px;
     border: 1px solid var(--border);
+    margin-bottom: 32px;
     width: fit-content;
   }
-  .toggle-chip {
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-size: 13px;
+  .filter-chip {
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-muted);
     transition: all 0.15s;
   }
-  .toggle-chip.active { background: var(--primary); color: #1A1000; font-weight: 600; }
+  .filter-chip.active { background: var(--primary); color: #1A1000; font-weight: 600; }
+  .filter-chip:hover:not(.active) { background: var(--bg-soft); color: var(--text); }
+
+  .category-section { margin-bottom: 48px; }
+  .category-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .category-header h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .category-header .count {
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
 
   .spec-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 18px;
-    margin-bottom: 24px;
+    border-radius: 6px;
+    margin-bottom: 20px;
     overflow: hidden;
   }
   .spec-head {
-    padding: 18px 24px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px;
+    flex-wrap: wrap; gap: 10px;
   }
-  .spec-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .spec-title h3 { font-size: 16px; font-weight: 700; }
+  .spec-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .spec-title h3 { font-size: 15px; font-weight: 700; }
   .spec-title code {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--primary);
     background: var(--primary-soft);
     padding: 3px 8px;
-    border-radius: 6px;
+    border-radius: 4px;
     font-family: 'SF Mono', Monaco, Menlo, monospace;
   }
   .spec-usecase {
-    padding: 14px 24px;
+    padding: 12px 20px;
     background: var(--bg-card-2);
     color: var(--text-muted);
-    font-size: 13px;
+    font-size: 12px;
     border-bottom: 1px solid var(--border);
   }
   .spec-usecase strong { color: var(--text); font-weight: 600; }
 
-  .chat-mock {
-    padding: 32px 24px;
-    background: var(--bg-page);
-  }
+  .chat-mock { padding: 28px 24px; background: var(--bg-page); }
 
   /* Chat */
   .agent-row { display: flex; gap: 12px; margin-bottom: 16px; max-width: 560px; }
@@ -117,20 +128,15 @@
     position: relative;
   }
   .agent-avatar::before {
-    content: '';
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    border: 1px dashed var(--primary);
-    opacity: 0.4;
+    content: ''; position: absolute; inset: -5px;
+    border-radius: 50%; border: 1px dashed var(--primary); opacity: 0.4;
   }
   .agent-bubble {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 4px 16px 16px 16px;
+    border-radius: 4px 12px 12px 12px;
     padding: 12px 16px;
     font-size: 14px;
-    color: var(--text);
   }
   .agent-bubble .context { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 
@@ -139,13 +145,13 @@
   .ui-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 18px;
+    border-radius: 6px;
     padding: 20px;
   }
-  .card-question { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-  .card-help { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+  .ui-card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .ui-card-help { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
 
-  /* Buttons */
+  /* ===== Buttons ===== */
   .btn {
     padding: 11px 18px;
     border-radius: 6px;
@@ -157,24 +163,23 @@
     justify-content: center;
     gap: 6px;
   }
-  .btn-primary {
-    background: var(--primary-soft);
-    color: var(--primary);
-  }
+  .btn-primary { background: var(--primary-soft); color: var(--primary); }
   .btn-primary:hover { background: var(--primary); color: #1A1000; }
   .btn-secondary { background: var(--bg-soft); color: var(--text); border: 1px solid var(--border); }
   .btn-secondary:hover { background: var(--bg-card-2); border-color: var(--border-strong); }
+  .btn-ghost { color: var(--text-muted); }
+  .btn-ghost:hover { color: var(--text); background: var(--bg-soft); }
   .btn-block { width: 100%; }
-  .btn-lg { padding: 14px 20px; font-size: 15px; }
+  .btn-lg { padding: 14px 20px; font-size: 14px; }
 
-  /* ============== 1. Single Choice ============== */
-  .choice-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  /* ============== single_choice ============== */
+  .choice-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
   .choice-option {
-    display: flex; align-items: center; gap: 14px;
-    padding: 16px;
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px;
     background: var(--bg-card-2);
     border: 1.5px solid var(--border);
-    border-radius: 12px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.15s;
     text-align: left;
@@ -183,184 +188,283 @@
   .choice-option:hover { border-color: var(--primary); background: var(--primary-soft); }
   .choice-option.selected { border-color: var(--primary); background: var(--primary-soft); }
   .choice-option .icon-box {
-    width: 40px; height: 40px;
+    width: 38px; height: 38px;
     background: var(--bg-soft);
-    border-radius: 10px;
+    border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-muted);
     flex-shrink: 0;
-    transition: all 0.15s;
   }
   .choice-option.selected .icon-box { background: var(--primary); color: #1A1000; }
   .choice-option .content { flex: 1; }
-  .choice-option .label { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+  .choice-option .label { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
   .choice-option .desc { font-size: 12px; color: var(--text-muted); }
   .choice-option .check {
-    width: 22px; height: 22px;
+    width: 20px; height: 20px;
     border: 2px solid var(--border-strong);
     border-radius: 50%;
     flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
   }
   .choice-option.selected .check { background: var(--primary); border-color: var(--primary); }
   .choice-option.selected .check::after {
-    content: ''; width: 6px; height: 11px;
-    border: solid #1A1000; border-width: 0 2.5px 2.5px 0;
+    content: ''; width: 6px; height: 10px;
+    border: solid #1A1000; border-width: 0 2px 2px 0;
     transform: rotate(45deg) translate(-1px, -1px);
   }
 
-  /* ============== 3. Slider ============== */
-  .slider-display {
-    text-align: center;
-    padding: 20px 0 28px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
+  /* ============== yes_no ============== */
+  .yesno-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .yesno-btn {
+    padding: 18px 16px;
+    background: var(--bg-card-2);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    text-align: left;
+    transition: all 0.15s;
   }
-  .slider-big-num {
-    font-size: 64px;
-    font-weight: 800;
-    color: var(--primary);
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-  .slider-big-meta {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-  }
-  .slider-track-wrap {
-    padding: 0 12px;
-  }
-  .slider-track {
-    height: 8px;
-    background: var(--bg-soft);
-    border-radius: 999px;
-    position: relative;
-    margin-bottom: 12px;
-  }
-  .slider-fill {
-    height: 100%;
-    background: var(--primary);
-    border-radius: 999px;
-    width: 50%;
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
-  }
-  .slider-thumb {
-    position: absolute;
-    width: 22px; height: 22px;
-    background: var(--text);
-    border: 3px solid var(--primary);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    cursor: grab;
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
-  }
-  .slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--text-subtle);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
-    margin-top: 16px;
-  }
+  .yesno-btn:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .yesno-btn .yn-label { font-weight: 700; font-size: 15px; margin-bottom: 6px; color: var(--text); }
+  .yesno-btn.yes:hover .yn-label { color: var(--primary); }
+  .yesno-btn .yn-conseq { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* ============== slider ============== */
+  .slider-display { text-align: center; padding: 16px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+  .slider-big-num { font-size: 56px; font-weight: 800; color: var(--primary); letter-spacing: -0.04em; line-height: 1; }
+  .slider-big-meta { font-size: 11px; color: var(--text-muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+  .slider-track-wrap { padding: 0 8px; }
+  .slider-track { height: 6px; background: var(--bg-soft); border-radius: 999px; position: relative; margin-bottom: 12px; }
+  .slider-fill { height: 100%; background: var(--primary); border-radius: 999px; width: 50%; box-shadow: 0 0 12px rgba(245, 158, 11, 0.4); }
+  .slider-thumb { position: absolute; width: 20px; height: 20px; background: var(--text); border: 3px solid var(--primary); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); }
+  .slider-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-top: 14px; }
   .slider-labels .label-mid { color: var(--text-muted); }
 
-  /* Slider batch — bonus example */
-  .slider-batch-row {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-  }
+  /* slider batch */
+  .slider-batch-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
   .slider-batch-row:last-child { border-bottom: none; }
-  .slider-batch-label { width: 110px; font-size: 13px; font-weight: 500; color: var(--text); flex-shrink: 0; }
-  .slider-batch-track {
-    flex: 1; height: 6px;
-    background: var(--bg-soft);
-    border-radius: 999px;
-    position: relative;
-  }
-  .slider-batch-fill {
-    height: 100%;
-    background: var(--primary);
-    border-radius: 999px;
-  }
-  .slider-batch-thumb {
-    position: absolute;
-    width: 14px; height: 14px;
-    background: var(--text);
-    border: 2.5px solid var(--primary);
-    border-radius: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .slider-batch-value {
-    width: 48px; text-align: right;
-    font-weight: 700; font-size: 13px;
-    color: var(--primary);
-    font-variant-numeric: tabular-nums;
-  }
+  .slider-batch-label { width: 110px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .slider-batch-track { flex: 1; height: 5px; background: var(--bg-soft); border-radius: 999px; position: relative; }
+  .slider-batch-fill { height: 100%; background: var(--primary); border-radius: 999px; }
+  .slider-batch-thumb { position: absolute; width: 14px; height: 14px; background: var(--text); border: 2.5px solid var(--primary); border-radius: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .slider-batch-value { width: 48px; text-align: right; font-weight: 700; font-size: 13px; color: var(--primary); font-variant-numeric: tabular-nums; }
 
-  /* Comparison note */
-  .note {
-    background: var(--bg-card);
-    border-left: 3px solid var(--primary);
-    padding: 14px 18px;
-    border-radius: 8px;
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 32px;
+  /* ============== multi_select ============== */
+  .multi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .multi-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px;
+    background: var(--bg-card-2);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.15s;
+    text-align: left;
   }
-  .note strong { color: var(--text); }
+  .multi-option:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .multi-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .multi-checkbox {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border-strong);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .multi-option.selected .multi-checkbox { background: var(--primary); border-color: var(--primary); }
+  .multi-option.selected .multi-checkbox::after {
+    content: ''; width: 6px; height: 10px;
+    border: solid #1A1000; border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .multi-option .ml { font-weight: 500; font-size: 13px; }
+  .multi-meta { font-size: 11px; color: var(--text-subtle); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
 
-  /* Token panel at bottom */
-  .tokens {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 24px;
-    margin-top: 40px;
+  /* ============== date_picker ============== */
+  .date-input-wrap { position: relative; margin-bottom: 12px; }
+  .date-input {
+    width: 100%;
+    padding: 14px 14px 14px 44px;
+    background: var(--bg-card-2);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 14px;
+    color-scheme: dark;
+    transition: all 0.15s;
   }
-  .tokens h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
-  .token-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-  }
-  .token-swatch {
+  .date-input:focus { outline: none; border-color: var(--primary); }
+  .date-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--primary); pointer-events: none; }
+  .date-relative { font-size: 13px; color: var(--primary); margin-bottom: 14px; font-weight: 600; padding: 8px 12px; background: var(--primary-soft); border-radius: 6px; display: inline-block; }
+  .date-toggle { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text-muted); cursor: pointer; margin-bottom: 16px; }
+  .date-toggle:hover { color: var(--text); border-color: var(--border-strong); }
+  .date-checkbox-mini { width: 18px; height: 18px; border: 1.5px solid var(--border-strong); border-radius: 4px; flex-shrink: 0; }
+
+  /* ============== time_picker ============== */
+  .time-display {
     background: var(--bg-card-2);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    display: flex; align-items: center; gap: 12px;
+    border-radius: 6px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .time-big { font-size: 56px; font-weight: 800; color: var(--primary); letter-spacing: -0.04em; line-height: 1; }
+  .time-period { font-size: 11px; color: var(--text-muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+  .time-dial { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .time-pill {
+    padding: 8px 14px;
+    background: var(--bg-card-2);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
     font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.15s;
   }
-  .token-swatch .sw {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    flex-shrink: 0;
-    border: 1px solid var(--border);
+  .time-pill:hover { border-color: var(--primary); color: var(--text); }
+  .time-pill.active { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+
+  /* ============== setup_mode_toggle ============== */
+  .setup-mode {
+    background: var(--bg-card-2);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    width: 100%;
   }
+  .setup-mode:hover { border-color: var(--primary); }
+  .setup-mode.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .setup-mode-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .setup-radio { width: 20px; height: 20px; border: 2px solid var(--border-strong); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .setup-mode.selected .setup-radio { border-color: var(--primary); }
+  .setup-mode.selected .setup-radio::after { content: ''; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; }
+  .setup-mode-label { font-weight: 600; font-size: 14px; flex: 1; }
+  .setup-mode-time { font-size: 11px; padding: 3px 8px; background: var(--bg-soft); color: var(--text-muted); border-radius: 999px; font-weight: 600; }
+  .setup-mode.selected .setup-mode-time { background: var(--primary); color: #1A1000; }
+  .setup-mode-desc { font-size: 13px; color: var(--text-muted); padding-left: 32px; }
+  .setup-mode-rec { font-size: 11px; color: var(--primary); padding-left: 32px; margin-top: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ============== acknowledge_list ============== */
+  .ack-intro { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; padding: 12px 14px; background: var(--primary-soft); border-radius: 6px; border-left: 3px solid var(--primary); }
+  .ack-item { background: var(--bg-card-2); border: 1.5px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
+  .ack-item.acknowledged { border-color: var(--primary); background: var(--primary-soft); }
+  .ack-item-header { padding: 14px; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+  .ack-checkbox { width: 22px; height: 22px; border: 2px solid var(--border-strong); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .ack-item.acknowledged .ack-checkbox { background: var(--primary); border-color: var(--primary); }
+  .ack-item.acknowledged .ack-checkbox::after { content: ''; width: 6px; height: 10px; border: solid #1A1000; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }
+  .ack-content { flex: 1; }
+  .ack-label { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .ack-desc { font-size: 12px; color: var(--text-muted); }
+  .ack-expand { color: var(--text-subtle); font-size: 14px; }
+  .ack-body { padding: 0 14px 14px 48px; font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .ack-body.hidden { display: none; }
+
+  /* ============== inventory_checklist ============== */
+  .inv-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg-card-2); border: 1.5px solid var(--border); border-radius: 6px; margin-bottom: 8px; }
+  .inv-item.have { border-color: var(--success); background: var(--success-soft); }
+  .inv-item.need { border-color: var(--primary); background: var(--primary-soft); }
+  .inv-icon { width: 36px; height: 36px; background: var(--bg-soft); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .inv-info { flex: 1; }
+  .inv-label { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .inv-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .inv-essential { font-size: 9px; padding: 2px 6px; background: var(--error-soft); color: var(--error); border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .inv-states { display: flex; gap: 4px; }
+  .inv-state-btn { padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 4px; font-size: 11px; font-weight: 600; background: var(--bg-card); color: var(--text-muted); transition: all 0.15s; text-transform: uppercase; letter-spacing: 0.04em; }
+  .inv-state-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .inv-state-btn.active.have { background: var(--success); border-color: var(--success); color: #0E1A05; }
+  .inv-state-btn.active.need { background: var(--primary); border-color: var(--primary); color: #1A1000; }
+  .inv-state-btn.active.na { background: var(--text-subtle); border-color: var(--text-subtle); color: var(--text); }
+  .inv-add { display: flex; align-items: center; gap: 8px; padding: 12px; border: 1.5px dashed var(--border-strong); border-radius: 6px; color: var(--text-muted); font-size: 13px; width: 100%; text-align: left; margin-bottom: 16px; }
+  .inv-add:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+
+  /* ============== summary_confirmation ============== */
+  .summary-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .summary-icon-box { width: 40px; height: 40px; background: var(--success-soft); color: var(--success); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .summary-list { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 16px; }
+  .summary-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
+  .summary-item:last-child { border-bottom: none; }
+  .summary-item .summary-label { color: var(--text-muted); font-size: 13px; }
+  .summary-item .summary-value { font-weight: 600; font-size: 14px; }
+  .summary-edit { color: var(--text-subtle); font-size: 11px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em; }
+  .summary-edit:hover { background: var(--bg-soft); color: var(--primary); }
+  .summary-actions { display: flex; gap: 8px; }
+  .summary-actions .btn-primary { flex: 1; }
+
+  /* ============== level_up ============== */
+  .levelup-card {
+    position: relative;
+    background: linear-gradient(135deg, var(--bg-page) 0%, #1A1206 50%, #2D1F08 100%);
+    border-radius: 6px;
+    padding: 32px 24px;
+    text-align: center;
+    overflow: hidden;
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.2), inset 0 0 60px rgba(245, 158, 11, 0.05);
+  }
+  .levelup-card.special {
+    background: linear-gradient(135deg, #0A0A0A 0%, #2D1F08 50%, #4D331C 100%);
+    box-shadow: 0 0 60px rgba(245, 158, 11, 0.4), inset 0 0 80px rgba(245, 158, 11, 0.1);
+  }
+  .levelup-sparkles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .levelup-sparkles .sp { position: absolute; width: 4px; height: 4px; background: var(--lvl-color, var(--primary)); border-radius: 50%; box-shadow: 0 0 8px var(--lvl-color, var(--primary)); animation: float 4s ease-in-out infinite; }
+  .levelup-sparkles .sp:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+  .levelup-sparkles .sp:nth-child(2) { top: 30%; right: 20%; animation-delay: 0.5s; }
+  .levelup-sparkles .sp:nth-child(3) { bottom: 30%; left: 25%; animation-delay: 1s; }
+  .levelup-sparkles .sp:nth-child(4) { bottom: 25%; right: 18%; animation-delay: 1.5s; }
+  .levelup-sparkles .sp:nth-child(5) { top: 50%; right: 30%; animation-delay: 2s; }
+  .levelup-sparkles .sp:nth-child(6) { top: 60%; left: 20%; animation-delay: 2.5s; }
+  @keyframes float { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; } 50% { transform: translateY(-12px) scale(1.4); opacity: 1; } }
+  .levelup-banner {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .levelup-attr-name { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-muted); margin-bottom: 4px; }
+  .levelup-level-num { font-size: 72px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--lvl-color, var(--primary)); margin: 8px 0 4px; }
+  .levelup-level-name { font-size: 22px; font-weight: 700; margin-bottom: 18px; color: var(--lvl-color, var(--primary)); }
+  .levelup-divider { width: 60px; height: 2px; background: var(--lvl-color, var(--primary)); margin: 0 auto 18px; opacity: 0.6; }
+  .levelup-quote { font-size: 14px; font-style: italic; line-height: 1.6; opacity: 0.85; max-width: 360px; margin: 0 auto 14px; color: var(--text); }
+  .levelup-message { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
+  .levelup-card.compact { padding: 24px 20px; }
+  .levelup-card.compact .levelup-level-num { font-size: 52px; }
+  .levelup-card.compact .levelup-level-name { font-size: 18px; }
+
+  /* ===== Tokens panel ===== */
+  .tokens { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; margin-top: 40px; }
+  .tokens h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+  .token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .token-swatch { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 12px; font-size: 12px; }
+  .token-swatch .sw { width: 32px; height: 32px; border-radius: 6px; flex-shrink: 0; border: 1px solid var(--border); }
   .token-swatch .nm { font-weight: 600; }
   .token-swatch .vl { color: var(--text-muted); font-family: 'SF Mono', Monaco, monospace; font-size: 11px; }
+
+  @media (max-width: 700px) {
+    main { padding: 0 16px; }
+    .header { padding: 24px 16px; }
+    .multi-grid { grid-template-columns: 1fr; }
+    .yesno-grid { grid-template-columns: 1fr; }
+    .card-wrapper { margin-left: 0; }
+  }
 </style>
 </head>
 <body>
 
 <header class="header">
   <div class="header-inner">
-    <h1>Ganttsy — Cards in your design language</h1>
-    <div class="sub">2 sample widgets restyled with your dark + amber tokens. Sign off and I'll port the remaining 9.</div>
+    <h1>Ganttsy — UI Intent Components</h1>
+    <div class="sub">11 React widgets the AI agent can render in chat. Restyled in your dark + amber design language.</div>
     <div class="meta">
-      <span class="pill">Sample · 2 of 11</span>
+      <span class="pill">11 widgets</span>
       <span>·</span>
       <span>Dark mode · Amber primary · Inter</span>
     </div>
@@ -369,163 +473,573 @@
 
 <main>
 
-  <div class="note">
-    <strong>What changed from the original preview →</strong> Black background, amber primary (no more indigo), darker cards with thin borders, bigger bolder numbers (matches your dashboard's "90 / 9,000" treatment), no shadows (depth via contrast), pill-rounded buttons that match your "Start Task" style.
+  <div class="filter-bar">
+    <button class="filter-chip active" onclick="filterCat('all', this)">All (11)</button>
+    <button class="filter-chip" onclick="filterCat('input', this)">Input (8)</button>
+    <button class="filter-chip" onclick="filterCat('confirm', this)">Confirmation (1)</button>
+    <button class="filter-chip" onclick="filterCat('nav', this)">Navigation (1)</button>
+    <button class="filter-chip" onclick="filterCat('display', this)">Display (1)</button>
   </div>
 
-  <!-- ============== Single Choice ============== -->
-  <article class="spec-card">
-    <div class="spec-head">
-      <div class="spec-title">
-        <h3>Single Choice</h3>
-        <code>single_choice</code>
-      </div>
-    </div>
-    <div class="spec-usecase"><strong>Use case:</strong> Project categorization, experience level. Pick one.</div>
+  <!-- ============== INPUT ============== -->
+  <section class="category-section" data-cat="input">
+    <div class="category-header"><h2>Input</h2><span class="count">8 widgets</span></div>
 
-    <div class="chat-mock">
-      <div class="agent-row">
-        <div class="agent-avatar">G</div>
-        <div class="agent-bubble">
-          How big is this project?
-          <div class="context">This helps me tailor the level of detail in your plan.</div>
-        </div>
+    <!-- single_choice -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Single Choice</h3><code>single_choice</code></div>
       </div>
-      <div class="card-wrapper">
-        <div class="ui-card">
-          <div class="choice-list">
-            <button class="choice-option" onclick="pickSingle(this)">
-              <div class="icon-box">○</div>
-              <div class="content">
-                <div class="label">Small</div>
-                <div class="desc">5–10 tasks · completes in days</div>
-              </div>
-              <div class="check"></div>
-            </button>
-            <button class="choice-option selected" onclick="pickSingle(this)">
-              <div class="icon-box">▢</div>
-              <div class="content">
-                <div class="label">Medium</div>
-                <div class="desc">15–25 tasks · completes in weeks</div>
-              </div>
-              <div class="check"></div>
-            </button>
-            <button class="choice-option" onclick="pickSingle(this)">
-              <div class="icon-box">⬡</div>
-              <div class="content">
-                <div class="label">Large</div>
-                <div class="desc">30+ tasks · completes in months</div>
-              </div>
-              <div class="check"></div>
-            </button>
+      <div class="spec-usecase"><strong>Intents:</strong> project_size · experience_level · scope_switch_suggestion. Pick one from a list.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            How big is this project?
+            <div class="context">This helps me tailor the level of detail in your plan.</div>
           </div>
-          <button class="btn btn-primary btn-lg btn-block">Continue</button>
         </div>
-      </div>
-    </div>
-  </article>
-
-  <!-- ============== Slider ============== -->
-  <article class="spec-card">
-    <div class="spec-head">
-      <div class="spec-title">
-        <h3>Slider</h3>
-        <code>slider</code>
-      </div>
-    </div>
-    <div class="spec-usecase"><strong>Use case:</strong> Importance rating, energy commitment, budget range. Big-number display matches your dashboard streak counter.</div>
-
-    <div class="chat-mock">
-      <div class="agent-row">
-        <div class="agent-avatar">G</div>
-        <div class="agent-bubble">How important is completing this project to you?</div>
-      </div>
-      <div class="card-wrapper">
-        <div class="ui-card">
-          <div class="slider-display">
-            <div class="slider-big-num">3</div>
-            <div class="slider-big-meta">Important</div>
-          </div>
-          <div class="slider-track-wrap">
-            <div class="slider-track">
-              <div class="slider-fill"></div>
-              <div class="slider-thumb"></div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="choice-list">
+              <button class="choice-option" onclick="pickSingle(this)">
+                <div class="icon-box">○</div>
+                <div class="content"><div class="label">Small</div><div class="desc">5–10 tasks · completes in days</div></div>
+                <div class="check"></div>
+              </button>
+              <button class="choice-option selected" onclick="pickSingle(this)">
+                <div class="icon-box">▢</div>
+                <div class="content"><div class="label">Medium</div><div class="desc">15–25 tasks · completes in weeks</div></div>
+                <div class="check"></div>
+              </button>
+              <button class="choice-option" onclick="pickSingle(this)">
+                <div class="icon-box">⬡</div>
+                <div class="content"><div class="label">Large</div><div class="desc">30+ tasks · completes in months</div></div>
+                <div class="check"></div>
+              </button>
             </div>
-            <div class="slider-labels">
-              <span>Nice to have</span>
-              <span class="label-mid">Important</span>
-              <span>Critical</span>
+            <button class="btn btn-primary btn-lg btn-block">Continue</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- yes_no -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Yes / No</h3><code>yes_no</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> yes_no_question. Binary decision with consequence preview.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            Switch to Project scope to discuss cross-phase priorities?
+            <div class="context">Your question about phase dependencies needs broader context.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="yesno-grid">
+              <button class="yesno-btn yes">
+                <div class="yn-label">✓ Switch Scope</div>
+                <div class="yn-conseq">I'll load all project phases into our conversation.</div>
+              </button>
+              <button class="yesno-btn no">
+                <div class="yn-label">✕ Stay Here</div>
+                <div class="yn-conseq">I'll answer with limited context from this step only.</div>
+              </button>
             </div>
           </div>
-          <button class="btn btn-primary btn-lg btn-block" style="margin-top: 24px;">Set priority</button>
         </div>
       </div>
-    </div>
-  </article>
+    </article>
 
-  <!-- ============== Slider — Batch (bonus to show pattern flex) ============== -->
-  <article class="spec-card">
-    <div class="spec-head">
-      <div class="spec-title">
-        <h3>Slider — Batch <code>items[]</code></h3>
-        <code>slider</code>
+    <!-- slider -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Slider</h3><code>slider</code></div>
       </div>
-    </div>
-    <div class="spec-usecase"><strong>Use case:</strong> <code>skill_assessment</code> intent — rate multiple items in one card.</div>
-
-    <div class="chat-mock">
-      <div class="agent-row">
-        <div class="agent-avatar">G</div>
-        <div class="agent-bubble">Self-assessment — rate your confidence on each skill (1 = beginner, 5 = expert).</div>
-      </div>
-      <div class="card-wrapper">
-        <div class="ui-card">
-          <div class="slider-batch-row">
-            <div class="slider-batch-label">Carpentry</div>
-            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 40%;"></div><div class="slider-batch-thumb" style="left: 40%;"></div></div>
-            <div class="slider-batch-value">2 / 5</div>
+      <div class="spec-usecase"><strong>Intents:</strong> importance_rating · energy_commitment · budget_range. Numeric scale with big-number readout.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">How important is completing this project to you?</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="slider-display">
+              <div class="slider-big-num">3</div>
+              <div class="slider-big-meta">Important</div>
+            </div>
+            <div class="slider-track-wrap">
+              <div class="slider-track"><div class="slider-fill"></div><div class="slider-thumb"></div></div>
+              <div class="slider-labels">
+                <span>Nice to have</span>
+                <span class="label-mid">Important</span>
+                <span>Critical</span>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" style="margin-top: 24px;">Set priority</button>
           </div>
-          <div class="slider-batch-row">
-            <div class="slider-batch-label">Plumbing</div>
-            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 20%;"></div><div class="slider-batch-thumb" style="left: 20%;"></div></div>
-            <div class="slider-batch-value">1 / 5</div>
-          </div>
-          <div class="slider-batch-row">
-            <div class="slider-batch-label">Electrical</div>
-            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 60%;"></div><div class="slider-batch-thumb" style="left: 60%;"></div></div>
-            <div class="slider-batch-value">3 / 5</div>
-          </div>
-          <div class="slider-batch-row">
-            <div class="slider-batch-label">Painting</div>
-            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 80%;"></div><div class="slider-batch-thumb" style="left: 80%;"></div></div>
-            <div class="slider-batch-value">4 / 5</div>
-          </div>
-          <button class="btn btn-primary btn-lg btn-block" style="margin-top: 20px;">Save assessment</button>
         </div>
       </div>
-    </div>
-  </article>
+    </article>
 
-  <!-- Token panel -->
+    <!-- slider batch -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Slider — Batch</h3><code>slider · items[]</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> skill_assessment. Rate multiple items in one card.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Self-assessment — rate your confidence on each skill (1 = beginner, 5 = expert).</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="slider-batch-row"><div class="slider-batch-label">Carpentry</div><div class="slider-batch-track"><div class="slider-batch-fill" style="width: 40%;"></div><div class="slider-batch-thumb" style="left: 40%;"></div></div><div class="slider-batch-value">2 / 5</div></div>
+            <div class="slider-batch-row"><div class="slider-batch-label">Plumbing</div><div class="slider-batch-track"><div class="slider-batch-fill" style="width: 20%;"></div><div class="slider-batch-thumb" style="left: 20%;"></div></div><div class="slider-batch-value">1 / 5</div></div>
+            <div class="slider-batch-row"><div class="slider-batch-label">Electrical</div><div class="slider-batch-track"><div class="slider-batch-fill" style="width: 60%;"></div><div class="slider-batch-thumb" style="left: 60%;"></div></div><div class="slider-batch-value">3 / 5</div></div>
+            <div class="slider-batch-row"><div class="slider-batch-label">Painting</div><div class="slider-batch-track"><div class="slider-batch-fill" style="width: 80%;"></div><div class="slider-batch-thumb" style="left: 80%;"></div></div><div class="slider-batch-value">4 / 5</div></div>
+            <button class="btn btn-primary btn-lg btn-block" style="margin-top: 18px;">Save assessment</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- multi_select -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Multi-Select</h3><code>multi_select</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> why_motivation. Pick multiple, with min/max enforced.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            Which of these tools do you already have?
+            <div class="context">I'll add missing tools to your shopping list.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="multi-meta">3 of 4 selected · min 0 · max ∞</div>
+            <div class="multi-grid">
+              <button class="multi-option selected" onclick="this.classList.toggle('selected')"><span class="multi-checkbox"></span><span class="ml">🔧 Power Drill</span></button>
+              <button class="multi-option" onclick="this.classList.toggle('selected')"><span class="multi-checkbox"></span><span class="ml">⚙️ Circular Saw</span></button>
+              <button class="multi-option selected" onclick="this.classList.toggle('selected')"><span class="multi-checkbox"></span><span class="ml">📐 Level</span></button>
+              <button class="multi-option selected" onclick="this.classList.toggle('selected')"><span class="multi-checkbox"></span><span class="ml">📏 Tape Measure</span></button>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block" style="margin-top: 16px;">Confirm selection</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- date_picker -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Date Picker</h3><code>date_picker</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> deadline_preference. Optional "no deadline" escape + relative-date helper.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            When do you want to complete this project?
+            <div class="context">I'll work backwards from this date to create your timeline.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="date-input-wrap">
+              <span class="date-icon">📅</span>
+              <input type="date" class="date-input" value="2026-06-13" />
+            </div>
+            <div class="date-relative">→ in 44 days</div>
+            <label class="date-toggle">
+              <span class="date-checkbox-mini"></span>
+              No specific deadline
+            </label>
+            <button class="btn btn-primary btn-lg btn-block">Set deadline</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- time_picker -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Time Picker</h3><code>time_picker</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> daily_checkin_time. Big readout matches your dashboard "5/7 Days" treatment.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            What time should I check in with you daily?
+            <div class="context">I'll send a brief progress check and today's priorities.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="time-display">
+              <div class="time-big">9:00</div>
+              <div class="time-period">AM · every day</div>
+            </div>
+            <div class="time-dial">
+              <button class="time-pill">7:00 AM</button>
+              <button class="time-pill">8:00 AM</button>
+              <button class="time-pill active">9:00 AM</button>
+              <button class="time-pill">10:00 AM</button>
+              <button class="time-pill">12:00 PM</button>
+              <button class="time-pill">6:00 PM</button>
+            </div>
+            <button class="btn btn-primary btn-lg btn-block">Confirm time</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- acknowledge_list -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Acknowledge List</h3><code>acknowledge_list</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intents:</strong> quit_reasons_awareness · risk_acknowledgment. Expandable items the user must check.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Before we plan, let's get on guard for the things that derail projects.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="ui-card-title">Why projects sometimes fail</div>
+            <div class="ack-intro">To succeed, you need to understand what stands in your way. We'll be on guard for each of these.</div>
+
+            <div class="ack-item acknowledged">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content"><div class="ack-label">📅 Poor Planning</div><div class="ack-desc">Starting without clear milestones or timeline</div></div>
+                <span class="ack-expand">▾</span>
+              </div>
+              <div class="ack-body">Projects without structured phases and checkpoints are 3× more likely to be abandoned. We'll create a clear roadmap together.</div>
+            </div>
+
+            <div class="ack-item acknowledged">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content"><div class="ack-label">🔋 Loss of Motivation</div><div class="ack-desc">Initial enthusiasm fading over time</div></div>
+                <span class="ack-expand">▸</span>
+              </div>
+              <div class="ack-body hidden">Motivation naturally fluctuates. Daily check-ins and small wins help maintain momentum.</div>
+            </div>
+
+            <div class="ack-item">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content"><div class="ack-label">❓ Skill Gaps</div><div class="ack-desc">Encountering tasks beyond current abilities</div></div>
+                <span class="ack-expand">▸</span>
+              </div>
+              <div class="ack-body hidden">We'll identify skills you need upfront and suggest resources or experts when you hit roadblocks.</div>
+            </div>
+
+            <div class="ack-item">
+              <div class="ack-item-header" onclick="toggleAck(this)">
+                <span class="ack-checkbox"></span>
+                <div class="ack-content"><div class="ack-label">⏱ Underestimating Time</div><div class="ack-desc">Tasks taking longer than expected</div></div>
+                <span class="ack-expand">▸</span>
+              </div>
+              <div class="ack-body hidden">We'll build buffer time into your schedule and adjust plans dynamically as reality unfolds.</div>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-block" style="margin-top: 16px;">I'm aware of these risks</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- inventory_checklist -->
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Inventory Checklist</h3><code>inventory_checklist</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intents:</strong> tool_inventory · material_inventory. Have / Need / N/A per item with cost estimates.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">
+            Let's see what tools you already have.
+            <div class="context">I'll add items you need to your shopping list with price estimates.</div>
+          </div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="inv-item have">
+              <div class="inv-icon">🔧</div>
+              <div class="inv-info">
+                <div class="inv-label">Power Drill <span class="inv-essential">Essential</span></div>
+                <div class="inv-meta">Cordless preferred · $50–150</div>
+              </div>
+              <div class="inv-states">
+                <button class="inv-state-btn active have" onclick="setInvState(this, 'have')">Have</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'need')">Need</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'na')">N/A</button>
+              </div>
+            </div>
+
+            <div class="inv-item need">
+              <div class="inv-icon">⚙️</div>
+              <div class="inv-info">
+                <div class="inv-label">Circular Saw <span class="inv-essential">Essential</span></div>
+                <div class="inv-meta">$80–200</div>
+              </div>
+              <div class="inv-states">
+                <button class="inv-state-btn" onclick="setInvState(this, 'have')">Have</button>
+                <button class="inv-state-btn active need" onclick="setInvState(this, 'need')">Need</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'na')">N/A</button>
+              </div>
+            </div>
+
+            <div class="inv-item have">
+              <div class="inv-icon">📐</div>
+              <div class="inv-info">
+                <div class="inv-label">Level</div>
+                <div class="inv-meta">$10–40</div>
+              </div>
+              <div class="inv-states">
+                <button class="inv-state-btn active have" onclick="setInvState(this, 'have')">Have</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'need')">Need</button>
+                <button class="inv-state-btn" onclick="setInvState(this, 'na')">N/A</button>
+              </div>
+            </div>
+
+            <button class="inv-add">+ Add another tool you'll need…</button>
+            <button class="btn btn-primary btn-lg btn-block">Continue · 1 to buy · ~$140</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============== CONFIRMATION ============== -->
+  <section class="category-section" data-cat="confirm">
+    <div class="category-header"><h2>Confirmation</h2><span class="count">1 widget</span></div>
+
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Summary Confirmation</h3><code>summary_confirmation</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> step_completion. Recap of decisions with per-line edit before commit.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">Let's lock these in. You can edit any line before confirming.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <div class="summary-title-row">
+              <div class="summary-icon-box">✓</div>
+              <div>
+                <div class="ui-card-title" style="margin: 0;">Ready to complete project setup?</div>
+                <div style="font-size: 12px; color: var(--text-muted);">4 decisions ready to save</div>
+              </div>
+            </div>
+
+            <div class="summary-list">
+              <div class="summary-item">
+                <span class="summary-label">Daily check-in</span>
+                <div style="display:flex;align-items:center;gap:6px"><span class="summary-value">9:00 AM</span><button class="summary-edit">edit</button></div>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Target completion</span>
+                <div style="display:flex;align-items:center;gap:6px"><span class="summary-value">March 15, 2026</span><button class="summary-edit">edit</button></div>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Priority level</span>
+                <div style="display:flex;align-items:center;gap:6px"><span class="summary-value">High (4 / 5)</span><button class="summary-edit">edit</button></div>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Time commitment</span>
+                <div style="display:flex;align-items:center;gap:6px"><span class="summary-value">2 hours / day</span><button class="summary-edit">edit</button></div>
+              </div>
+            </div>
+
+            <div class="summary-actions">
+              <button class="btn btn-secondary">Cancel</button>
+              <button class="btn btn-primary btn-lg">Looks good — save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============== NAVIGATION ============== -->
+  <section class="category-section" data-cat="nav">
+    <div class="category-header"><h2>Navigation</h2><span class="count">1 widget</span></div>
+
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Setup Mode Toggle</h3><code>setup_mode_toggle</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> setup_mode_toggle. Returning users skip the verbose intro. Default adapts to project count.</div>
+      <div class="chat-mock">
+        <div class="agent-row">
+          <div class="agent-avatar">G</div>
+          <div class="agent-bubble">How would you like to set up this project? You've done this before, so I'll default to Quick.</div>
+        </div>
+        <div class="card-wrapper">
+          <div class="ui-card">
+            <button class="setup-mode" onclick="pickSetup(this)">
+              <div class="setup-mode-head">
+                <span class="setup-radio"></span>
+                <span class="setup-mode-label">Full walkthrough</span>
+                <span class="setup-mode-time">5–10 min</span>
+              </div>
+              <div class="setup-mode-desc">Guided setup with explanations for each step</div>
+              <div class="setup-mode-rec">★ First-time users or complex projects</div>
+            </button>
+
+            <button class="setup-mode selected" onclick="pickSetup(this)">
+              <div class="setup-mode-head">
+                <span class="setup-radio"></span>
+                <span class="setup-mode-label">Quick setup</span>
+                <span class="setup-mode-time">2–3 min</span>
+              </div>
+              <div class="setup-mode-desc">Just the essential questions, no explanations</div>
+              <div class="setup-mode-rec">★ Recommended for you (3rd project)</div>
+            </button>
+
+            <button class="setup-mode" onclick="pickSetup(this)">
+              <div class="setup-mode-head">
+                <span class="setup-radio"></span>
+                <span class="setup-mode-label">Minimal</span>
+                <span class="setup-mode-time">30 sec</span>
+              </div>
+              <div class="setup-mode-desc">Project name and deadline only — fill in details later</div>
+            </button>
+
+            <button class="btn btn-primary btn-lg btn-block" style="margin-top: 12px;">Start quick setup</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- ============== DISPLAY ============== -->
+  <section class="category-section" data-cat="display">
+    <div class="category-header"><h2>Display</h2><span class="count">1 widget</span></div>
+
+    <article class="spec-card">
+      <div class="spec-head">
+        <div class="spec-title"><h3>Level Up</h3><code>level_up</code></div>
+      </div>
+      <div class="spec-usecase"><strong>Intent:</strong> level_up. Display-only mastery celebration (GAN-383). Programmatically injected when user crosses an attribute threshold.</div>
+      <div class="chat-mock">
+
+        <div class="card-wrapper" style="margin-left: 0; margin-bottom: 20px;">
+          <div class="multi-meta">Special milestone (is_special: true)</div>
+          <div class="levelup-card special" style="--lvl-color: #F59E0B;">
+            <div class="levelup-sparkles"><span class="sp"></span><span class="sp"></span><span class="sp"></span><span class="sp"></span><span class="sp"></span><span class="sp"></span></div>
+            <div class="levelup-banner">✦ Level Up ✦</div>
+            <div class="levelup-attr-name">Discipline</div>
+            <div class="levelup-level-num">5</div>
+            <div class="levelup-level-name">Master</div>
+            <div class="levelup-divider"></div>
+            <div class="levelup-quote">"The seed that becomes a tree must first be planted in patient soil."</div>
+            <div class="levelup-message">You've maintained focus for 30 days straight. The discipline is becoming who you are.</div>
+            <button class="btn btn-primary btn-lg">Continue your journey →</button>
+          </div>
+        </div>
+
+        <div class="card-wrapper" style="margin-left: 0;">
+          <div class="multi-meta">Standard (is_special: false)</div>
+          <div class="levelup-card compact" style="--lvl-color: #84CC16;">
+            <div class="levelup-sparkles"><span class="sp"></span><span class="sp"></span><span class="sp"></span></div>
+            <div class="levelup-banner" style="background: var(--success-soft); color: var(--success);">Level Up</div>
+            <div class="levelup-attr-name">Patience</div>
+            <div class="levelup-level-num">3</div>
+            <div class="levelup-level-name">Apprentice</div>
+            <div class="levelup-divider"></div>
+            <div class="levelup-quote">"Slow is smooth. Smooth is fast."</div>
+            <div class="levelup-message">Three pauses before reacting this week. The pattern is forming.</div>
+            <button class="btn btn-primary btn-lg" style="background: var(--success-soft); color: var(--success);">Continue →</button>
+          </div>
+        </div>
+
+        <div class="card-wrapper" style="margin-left: 0; margin-top: 20px;">
+          <div class="multi-meta">Custom attribute color (Curiosity → cyan)</div>
+          <div class="levelup-card compact" style="--lvl-color: #22D3EE; border-color: #22D3EE;">
+            <div class="levelup-sparkles"><span class="sp"></span><span class="sp"></span><span class="sp"></span></div>
+            <div class="levelup-banner" style="background: rgba(34, 211, 238, 0.15); color: #22D3EE;">Level Up</div>
+            <div class="levelup-attr-name">Curiosity</div>
+            <div class="levelup-level-num">2</div>
+            <div class="levelup-level-name">Explorer</div>
+            <div class="levelup-divider"></div>
+            <div class="levelup-quote">"Questions are doors. Answers are rooms."</div>
+            <div class="levelup-message">You asked 'why?' five times today. Keep wandering.</div>
+            <button class="btn btn-primary btn-lg" style="background: rgba(34, 211, 238, 0.15); color: #22D3EE;">Continue →</button>
+          </div>
+        </div>
+
+      </div>
+    </article>
+  </section>
+
+  <!-- Tokens -->
   <div class="tokens">
-    <h3>Tokens extracted from your dashboard</h3>
+    <h3>Design tokens</h3>
     <div class="token-grid">
       <div class="token-swatch"><div class="sw" style="background:#0A0A0A"></div><div><div class="nm">bg-page</div><div class="vl">#0A0A0A</div></div></div>
       <div class="token-swatch"><div class="sw" style="background:#161616"></div><div><div class="nm">bg-card</div><div class="vl">#161616</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#1F1F1F"></div><div><div class="nm">bg-card-2</div><div class="vl">#1F1F1F</div></div></div>
       <div class="token-swatch"><div class="sw" style="background:#2A2A2A"></div><div><div class="nm">border</div><div class="vl">#2A2A2A</div></div></div>
       <div class="token-swatch"><div class="sw" style="background:#F59E0B"></div><div><div class="nm">primary</div><div class="vl">#F59E0B</div></div></div>
       <div class="token-swatch"><div class="sw" style="background:#3D2817"></div><div><div class="nm">primary-soft</div><div class="vl">#3D2817</div></div></div>
       <div class="token-swatch"><div class="sw" style="background:#84CC16"></div><div><div class="nm">success</div><div class="vl">#84CC16</div></div></div>
       <div class="token-swatch"><div class="sw" style="background:#FAFAFA"></div><div><div class="nm">text</div><div class="vl">#FAFAFA</div></div></div>
       <div class="token-swatch"><div class="sw" style="background:#A1A1AA"></div><div><div class="nm">text-muted</div><div class="vl">#A1A1AA</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#525252"></div><div><div class="nm">text-subtle</div><div class="vl">#525252</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:transparent;border:1px solid #2A2A2A"></div><div><div class="nm">radius (all)</div><div class="vl">6px</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:transparent;border:1px solid #2A2A2A"></div><div><div class="nm">font</div><div class="vl">Inter</div></div></div>
     </div>
   </div>
 
 </main>
 
 <script>
+  function filterCat(cat, btn) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.category-section').forEach(s => {
+      s.style.display = (cat === 'all' || s.dataset.cat === cat) ? '' : 'none';
+    });
+  }
   function pickSingle(el) {
     el.parentElement.querySelectorAll('.choice-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function toggleAck(headerEl) {
+    const item = headerEl.parentElement;
+    const body = item.querySelector('.ack-body');
+    const expand = headerEl.querySelector('.ack-expand');
+    item.classList.toggle('acknowledged');
+    body.classList.toggle('hidden');
+    expand.textContent = body.classList.contains('hidden') ? '▸' : '▾';
+  }
+  function setInvState(btn, state) {
+    const wrap = btn.closest('.inv-item');
+    wrap.classList.remove('have', 'need');
+    if (state === 'have') wrap.classList.add('have');
+    if (state === 'need') wrap.classList.add('need');
+    btn.parentElement.querySelectorAll('.inv-state-btn').forEach(b => b.classList.remove('active', 'have', 'need', 'na'));
+    btn.classList.add('active', state);
+  }
+  function pickSetup(el) {
+    el.parentElement.querySelectorAll('.setup-mode').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
   }
 </script>
