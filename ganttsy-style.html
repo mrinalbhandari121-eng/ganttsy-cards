@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ganttsy — Cards in design language</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-page: #0A0A0A;
+    --bg-card: #161616;
+    --bg-card-2: #1F1F1F;
+    --bg-soft: #232323;
+    --border: #2A2A2A;
+    --border-strong: #3A3A3A;
+    --primary: #F59E0B;
+    --primary-soft: #3D2817;
+    --primary-hover: #FBA823;
+    --success: #84CC16;
+    --success-soft: #1F2D0E;
+    --text: #FAFAFA;
+    --text-muted: #A1A1AA;
+    --text-subtle: #525252;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    background: var(--bg-page);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+  /* ===== Layout ===== */
+  .header {
+    padding: 32px 32px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner { max-width: 1200px; margin: 0 auto; }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .header .sub { color: var(--text-muted); font-size: 14px; margin-top: 6px; }
+  .header .meta { margin-top: 12px; display: flex; gap: 14px; font-size: 12px; color: var(--text-subtle); }
+  .header .meta .pill { background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 999px; }
+
+  main { max-width: 1200px; margin: 32px auto 80px; padding: 0 32px; }
+
+  .toggle-bar {
+    display: flex; gap: 8px;
+    margin-bottom: 32px;
+    background: var(--bg-card);
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    width: fit-content;
+  }
+  .toggle-chip {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .toggle-chip.active { background: var(--primary); color: #1A1000; font-weight: 600; }
+
+  .spec-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .spec-head {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .spec-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .spec-title h3 { font-size: 16px; font-weight: 700; }
+  .spec-title code {
+    font-size: 12px;
+    color: var(--primary);
+    background: var(--primary-soft);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: 'SF Mono', Monaco, Menlo, monospace;
+  }
+  .spec-usecase {
+    padding: 14px 24px;
+    background: var(--bg-card-2);
+    color: var(--text-muted);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .spec-usecase strong { color: var(--text); font-weight: 600; }
+
+  .chat-mock {
+    padding: 32px 24px;
+    background: var(--bg-page);
+  }
+
+  /* Chat */
+  .agent-row { display: flex; gap: 12px; margin-bottom: 16px; max-width: 560px; }
+  .agent-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    position: relative;
+  }
+  .agent-avatar::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px dashed var(--primary);
+    opacity: 0.4;
+  }
+  .agent-bubble {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px 16px 16px 16px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .agent-bubble .context { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+  .card-wrapper { margin-left: 48px; max-width: 540px; }
+
+  .ui-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+  }
+  .card-question { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .card-help { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+
+  /* Buttons */
+  .btn {
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-primary { background: var(--primary); color: #1A1000; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-secondary { background: var(--bg-soft); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg-card-2); border-color: var(--border-strong); }
+  .btn-block { width: 100%; }
+  .btn-lg { padding: 14px 20px; font-size: 15px; }
+
+  /* ============== 1. Single Choice ============== */
+  .choice-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .choice-option {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px;
+    background: var(--bg-card-2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    width: 100%;
+  }
+  .choice-option:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .choice-option.selected { border-color: var(--primary); background: var(--primary-soft); }
+  .choice-option .icon-box {
+    width: 40px; height: 40px;
+    background: var(--bg-soft);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .choice-option.selected .icon-box { background: var(--primary); color: #1A1000; }
+  .choice-option .content { flex: 1; }
+  .choice-option .label { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
+  .choice-option .desc { font-size: 12px; color: var(--text-muted); }
+  .choice-option .check {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border-strong);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .choice-option.selected .check { background: var(--primary); border-color: var(--primary); }
+  .choice-option.selected .check::after {
+    content: ''; width: 6px; height: 11px;
+    border: solid #1A1000; border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+
+  /* ============== 3. Slider ============== */
+  .slider-display {
+    text-align: center;
+    padding: 20px 0 28px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .slider-big-num {
+    font-size: 64px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .slider-big-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  .slider-track-wrap {
+    padding: 0 12px;
+  }
+  .slider-track {
+    height: 8px;
+    background: var(--bg-soft);
+    border-radius: 999px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .slider-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 999px;
+    width: 50%;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+  }
+  .slider-thumb {
+    position: absolute;
+    width: 22px; height: 22px;
+    background: var(--text);
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin-top: 16px;
+  }
+  .slider-labels .label-mid { color: var(--text-muted); }
+
+  /* Slider batch — bonus example */
+  .slider-batch-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .slider-batch-row:last-child { border-bottom: none; }
+  .slider-batch-label { width: 110px; font-size: 13px; font-weight: 500; color: var(--text); flex-shrink: 0; }
+  .slider-batch-track {
+    flex: 1; height: 6px;
+    background: var(--bg-soft);
+    border-radius: 999px;
+    position: relative;
+  }
+  .slider-batch-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 999px;
+  }
+  .slider-batch-thumb {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: var(--text);
+    border: 2.5px solid var(--primary);
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .slider-batch-value {
+    width: 48px; text-align: right;
+    font-weight: 700; font-size: 13px;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Comparison note */
+  .note {
+    background: var(--bg-card);
+    border-left: 3px solid var(--primary);
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+  .note strong { color: var(--text); }
+
+  /* Token panel at bottom */
+  .tokens {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    margin-top: 40px;
+  }
+  .tokens h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .token-swatch {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px;
+  }
+  .token-swatch .sw {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .token-swatch .nm { font-weight: 600; }
+  .token-swatch .vl { color: var(--text-muted); font-family: 'SF Mono', Monaco, monospace; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <h1>Ganttsy — Cards in your design language</h1>
+    <div class="sub">2 sample widgets restyled with your dark + amber tokens. Sign off and I'll port the remaining 9.</div>
+    <div class="meta">
+      <span class="pill">Sample · 2 of 11</span>
+      <span>·</span>
+      <span>Dark mode · Amber primary · Inter</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="note">
+    <strong>What changed from the original preview →</strong> Black background, amber primary (no more indigo), darker cards with thin borders, bigger bolder numbers (matches your dashboard's "90 / 9,000" treatment), no shadows (depth via contrast), pill-rounded buttons that match your "Start Task" style.
+  </div>
+
+  <!-- ============== Single Choice ============== -->
+  <article class="spec-card">
+    <div class="spec-head">
+      <div class="spec-title">
+        <h3>Single Choice</h3>
+        <code>single_choice</code>
+      </div>
+    </div>
+    <div class="spec-usecase"><strong>Use case:</strong> Project categorization, experience level. Pick one.</div>
+
+    <div class="chat-mock">
+      <div class="agent-row">
+        <div class="agent-avatar">G</div>
+        <div class="agent-bubble">
+          How big is this project?
+          <div class="context">This helps me tailor the level of detail in your plan.</div>
+        </div>
+      </div>
+      <div class="card-wrapper">
+        <div class="ui-card">
+          <div class="choice-list">
+            <button class="choice-option" onclick="pickSingle(this)">
+              <div class="icon-box">○</div>
+              <div class="content">
+                <div class="label">Small</div>
+                <div class="desc">5–10 tasks · completes in days</div>
+              </div>
+              <div class="check"></div>
+            </button>
+            <button class="choice-option selected" onclick="pickSingle(this)">
+              <div class="icon-box">▢</div>
+              <div class="content">
+                <div class="label">Medium</div>
+                <div class="desc">15–25 tasks · completes in weeks</div>
+              </div>
+              <div class="check"></div>
+            </button>
+            <button class="choice-option" onclick="pickSingle(this)">
+              <div class="icon-box">⬡</div>
+              <div class="content">
+                <div class="label">Large</div>
+                <div class="desc">30+ tasks · completes in months</div>
+              </div>
+              <div class="check"></div>
+            </button>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block">Continue</button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ============== Slider ============== -->
+  <article class="spec-card">
+    <div class="spec-head">
+      <div class="spec-title">
+        <h3>Slider</h3>
+        <code>slider</code>
+      </div>
+    </div>
+    <div class="spec-usecase"><strong>Use case:</strong> Importance rating, energy commitment, budget range. Big-number display matches your dashboard streak counter.</div>
+
+    <div class="chat-mock">
+      <div class="agent-row">
+        <div class="agent-avatar">G</div>
+        <div class="agent-bubble">How important is completing this project to you?</div>
+      </div>
+      <div class="card-wrapper">
+        <div class="ui-card">
+          <div class="slider-display">
+            <div class="slider-big-num">3</div>
+            <div class="slider-big-meta">Important</div>
+          </div>
+          <div class="slider-track-wrap">
+            <div class="slider-track">
+              <div class="slider-fill"></div>
+              <div class="slider-thumb"></div>
+            </div>
+            <div class="slider-labels">
+              <span>Nice to have</span>
+              <span class="label-mid">Important</span>
+              <span>Critical</span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" style="margin-top: 24px;">Set priority</button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ============== Slider — Batch (bonus to show pattern flex) ============== -->
+  <article class="spec-card">
+    <div class="spec-head">
+      <div class="spec-title">
+        <h3>Slider — Batch <code>items[]</code></h3>
+        <code>slider</code>
+      </div>
+    </div>
+    <div class="spec-usecase"><strong>Use case:</strong> <code>skill_assessment</code> intent — rate multiple items in one card.</div>
+
+    <div class="chat-mock">
+      <div class="agent-row">
+        <div class="agent-avatar">G</div>
+        <div class="agent-bubble">Self-assessment — rate your confidence on each skill (1 = beginner, 5 = expert).</div>
+      </div>
+      <div class="card-wrapper">
+        <div class="ui-card">
+          <div class="slider-batch-row">
+            <div class="slider-batch-label">Carpentry</div>
+            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 40%;"></div><div class="slider-batch-thumb" style="left: 40%;"></div></div>
+            <div class="slider-batch-value">2 / 5</div>
+          </div>
+          <div class="slider-batch-row">
+            <div class="slider-batch-label">Plumbing</div>
+            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 20%;"></div><div class="slider-batch-thumb" style="left: 20%;"></div></div>
+            <div class="slider-batch-value">1 / 5</div>
+          </div>
+          <div class="slider-batch-row">
+            <div class="slider-batch-label">Electrical</div>
+            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 60%;"></div><div class="slider-batch-thumb" style="left: 60%;"></div></div>
+            <div class="slider-batch-value">3 / 5</div>
+          </div>
+          <div class="slider-batch-row">
+            <div class="slider-batch-label">Painting</div>
+            <div class="slider-batch-track"><div class="slider-batch-fill" style="width: 80%;"></div><div class="slider-batch-thumb" style="left: 80%;"></div></div>
+            <div class="slider-batch-value">4 / 5</div>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" style="margin-top: 20px;">Save assessment</button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Token panel -->
+  <div class="tokens">
+    <h3>Tokens extracted from your dashboard</h3>
+    <div class="token-grid">
+      <div class="token-swatch"><div class="sw" style="background:#0A0A0A"></div><div><div class="nm">bg-page</div><div class="vl">#0A0A0A</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#161616"></div><div><div class="nm">bg-card</div><div class="vl">#161616</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#2A2A2A"></div><div><div class="nm">border</div><div class="vl">#2A2A2A</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#F59E0B"></div><div><div class="nm">primary</div><div class="vl">#F59E0B</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#3D2817"></div><div><div class="nm">primary-soft</div><div class="vl">#3D2817</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#84CC16"></div><div><div class="nm">success</div><div class="vl">#84CC16</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#FAFAFA"></div><div><div class="nm">text</div><div class="vl">#FAFAFA</div></div></div>
+      <div class="token-swatch"><div class="sw" style="background:#A1A1AA"></div><div><div class="nm">text-muted</div><div class="vl">#A1A1AA</div></div></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  function pickSingle(el) {
+    el.parentElement.querySelectorAll('.choice-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+</script>
+
+</body>
+</html>
